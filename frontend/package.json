@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "ci-test": "ng test --watch false",
+    "ci-build": "ng build --watch false"
   },
   "private": true,
   "dependencies": {
