@@ -38,10 +38,10 @@ jobs:
           pkg-manager: npm
       - run:
           name: Test
-          command: npm ng --watch false
+          command: npm run ng --watch false
       - run:
           name: Build
-          command: npm ng build
+          command: npm run ng build
 
 # Invoke jobs via workflows
 workflows:
