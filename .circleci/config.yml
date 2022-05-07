@@ -28,8 +28,7 @@ jobs:
     working_directory: ~/repo/frontend
     
     steps:
-      - checkout:
-        path: ~/repo
+      - checkout
       - node/install-packages:
          pkg-manager: npm
       - run:
