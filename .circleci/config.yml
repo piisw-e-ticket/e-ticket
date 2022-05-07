@@ -46,9 +46,9 @@ jobs:
 # Invoke jobs via workflows
 workflows:
   test-on-push:
+    branches:
+      only:
+        - main
+        - develop
     jobs:
-      branches:
-        only:
-          - main
-          - develop
       - frontend
