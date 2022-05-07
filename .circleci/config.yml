@@ -48,8 +48,8 @@ workflows:
   test-on-push:
     jobs:
       - frontend:
-        filters:
-          branches:
-            only:
-              - main
-              - develop
+          filters:
+            branches:
+              only:
+                - main
+                - develop
