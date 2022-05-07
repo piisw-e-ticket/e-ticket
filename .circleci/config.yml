@@ -12,7 +12,7 @@ jobs:
     
     steps:
       - checkout:
-        path: ~/repo
+          path: ~/repo
       - run:
           name: Build
           command: |
@@ -32,15 +32,15 @@ jobs:
     
     steps:
       - checkout:
-         path: ~/repo
+          path: ~/repo
       - node/install-packages:
-         pkg-manager: npm
+          pkg-manager: npm
       - run:
-         name: Test
-         command: npm test
+          name: Test
+          command: npm test
       - run:
-         name: Build
-         command: npm build
+          name: Build
+          command: npm build
 
 # Invoke jobs via workflows
 workflows:
