@@ -24,10 +24,12 @@ jobs:
   frontend:
     docker:
       - image: cimg/node:18.0.0
-      
+    
+    working_directory: ~/repo/frontend
+    
     steps:
       - checkout:
-        path: ~/frontend/
+        path: ~/repo
       - node/install-packages:
          pkg-manager: npm
       - run:
