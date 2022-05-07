@@ -7,9 +7,12 @@ jobs:
   backend:
     docker:
       - image: cimg/openjdk:17.0.1
-
+    
+    working_directory: ~/repo/backend
+    
     steps:
-      - checkout
+      - checkout:
+        path: ~/repo
       - run:
           name: Build
           command: |
@@ -29,15 +32,15 @@ jobs:
     
     steps:
       - checkout:
-         path: ~/repo/
+         path: ~/repo
       - node/install-packages:
          pkg-manager: npm
       - run:
          name: Test
-         command: ng test
+         command: npm test
       - run:
          name: Build
-         command: ng build
+         command: npm build
 
 # Invoke jobs via workflows
 workflows:
