@@ -45,6 +45,10 @@ jobs:
 
 # Invoke jobs via workflows
 workflows:
-  sample:
+  test-on-push:
+    branches:
+      only:
+        - main
+        - develop
     jobs:
       - frontend
