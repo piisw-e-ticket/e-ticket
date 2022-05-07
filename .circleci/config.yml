@@ -26,6 +26,8 @@ jobs:
       - image: cimg/node:18.0.0
       
     steps:
+      - checkout:
+        path: ~/frontend/
       - node/install-packages:
          pkg-manager: npm
       - run:
