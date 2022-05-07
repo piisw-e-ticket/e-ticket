@@ -47,15 +47,5 @@ jobs:
 workflows:
   test-on-push:
     jobs:
-      - backend:
-          filters:
-            branches:
-              only:
-                - main
-                - develop
-      - frontend:
-          filters:
-            branches:
-              only:
-                - main
-                - develop
+      - backend
+      - frontend
