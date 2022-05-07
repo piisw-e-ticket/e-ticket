@@ -21,19 +21,19 @@ jobs:
             cd ./backend/
             mvn test
     
-    frontend:
-      docker:
-        - image: cimg/node:18.0.0
+  frontend:
+    docker:
+      - image: cimg/node:18.0.0
       
-      steps:
-        - node/install-packages:
-            pkg-manager: npm
-        - run:
-            name: Test
-            command: ng test
-        - run:
-            name: Build
-            command: ng build
+    steps:
+      - node/install-packages:
+         pkg-manager: npm
+      - run:
+          name: Test
+          command: ng test
+      - run:
+          name: Build
+          command: ng build
 
 # Invoke jobs via workflows
 workflows:
