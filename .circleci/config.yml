@@ -26,8 +26,9 @@ jobs:
     
   frontend:
     docker:
-      - image: cimg/node:18.0.0
-    
+      - image: cimg/node:18.0.0-browsers
+    environment:
+      CHROME_BIN: /usr/bin/google-chrome
     working_directory: ~/repo/frontend
     
     steps:
@@ -46,5 +47,4 @@ jobs:
 workflows:
   sample:
     jobs:
-      - backend
       - frontend
