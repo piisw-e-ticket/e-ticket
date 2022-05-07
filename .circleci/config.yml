@@ -46,10 +46,9 @@ jobs:
 # Invoke jobs via workflows
 workflows:
   test-on-push:
-    filters:
+    jobs:
       branches:
         only:
           - main
           - develop
-    jobs:
       - frontend
