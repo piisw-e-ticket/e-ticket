@@ -38,10 +38,10 @@ jobs:
           pkg-manager: npm
       - run:
           name: Test
-          command: npm test
+          command: npm ci-test
       - run:
           name: Build
-          command: npm build
+          command: npm ci-build
 
 # Invoke jobs via workflows
 workflows:
