@@ -15,14 +15,10 @@ jobs:
           path: ~/repo
       - run:
           name: Build
-          command: |
-            cd ./backend/
-            mvn -B -DskipTests clean package
+          command: mvn -B -DskipTests clean package
       - run:
           name: Test
-          command: |
-            cd ./backend/
-            mvn test
+          command: mvn test
     
   frontend:
     docker:
