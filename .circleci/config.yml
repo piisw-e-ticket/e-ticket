@@ -1,0 +1,47 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@4.7.0
+
+jobs:
+  backend:
+    docker:
+      - image: cimg/openjdk:17.0.1
+    
+    working_directory: ~/repo/backend
+    
+    steps:
+      - checkout:
+          path: ~/repo
+      - run:
+          name: Build
+          command: mvn -B -DskipTests clean package
+      - run:
+          name: Test
+          command: mvn test
+    
+  frontend:
+    docker:
+      - image: cimg/node:18.0.0-browsers
+    environment:
+      CHROME_BIN: /usr/bin/google-chrome
+    working_directory: ~/repo/frontend
+    
+    steps:
+      - checkout:
+          path: ~/repo
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Test
+          command: npm run ng --watch false
+      - run:
+          name: Build
+          command: npm run ng build
+
+# Invoke jobs via workflows
+workflows:
+  test-on-push:
+    jobs:
+      - backend
+      - frontend
