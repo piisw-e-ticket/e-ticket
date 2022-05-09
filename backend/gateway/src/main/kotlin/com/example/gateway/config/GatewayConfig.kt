@@ -18,11 +18,14 @@ class GatewayConfig {
 
     @Bean
     fun routes(builder: RouteLocatorBuilder): RouteLocator? {
-        return builder.routes().route("auth") { r: PredicateSpec -> r.path("/auth/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://auth") }
-//                .route("alert") { r: PredicateSpec -> r.path("/alert/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://alert") }
+        return builder.routes().route("auth") { p ->
+            p.path("/auth/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://auth")
+        }.route("app") { p ->
+            p.path("/**").uri("lb://webserver")
+        }.build()
+
+    //                .route("alert") { r: PredicateSpec -> r.path("/alert/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://alert") }
 //                .route("echo") { r: PredicateSpec -> r.path("/echo/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://echo") }
 //                .route("hello") { r: PredicateSpec -> r.path("/hello/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://hello") }
-                .build()
     }
-
 }
