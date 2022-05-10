@@ -21,7 +21,7 @@ class GatewayConfig {
         return builder.routes().route("auth") { p ->
             p.path("/auth/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://auth")
         }.route("app") { p ->
-            p.path("/**").uri("lb://webserver")
+            p.path("/**").filters { f -> f.filter(ExtendAuthCookieValidityFilter()) }.uri("lb://webserver")
         }.build()
 
     //                .route("alert") { r: PredicateSpec -> r.path("/alert/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://alert") }
