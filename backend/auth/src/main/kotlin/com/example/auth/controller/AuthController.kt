@@ -22,18 +22,18 @@ class AuthController(
     fun login(@RequestBody loginDto: LoginDto): ResponseEntity<JwtTokenDto> {
         val authenticatedUser = userService.authenticateUser(loginDto)
         val token = jwtUtil.generateToken(authenticatedUser)
-        return ResponseEntity.ok(JwtTokenDto(token, authenticatedUser.roles)).apply {
-            headers.set("AuthCookie", createAuthCookie(token))
-        }
+        return ResponseEntity.ok()
+            .header("Set-Cookie", createAuthCookie(token))
+            .body(JwtTokenDto(token, authenticatedUser.roles))
     }
 
     @PostMapping("/auth/register")
     fun register(@RequestBody registerDto: RegisterDto): ResponseEntity<JwtTokenDto> {
         val user = userService.registerUser(registerDto)
         val token = jwtUtil.generateToken(user)
-        return ResponseEntity.ok(JwtTokenDto(token, user.roles)).apply {
-            headers.set("AuthCookie", createAuthCookie(token))
-        }
+        return ResponseEntity.ok()
+            .header("Set-Cookie", createAuthCookie(token))
+            .body(JwtTokenDto(token, user.roles))
     }
 
     private fun createAuthCookie(token: String): String {

@@ -7,7 +7,7 @@ spring:
   resources:
     cache:
       cachecontrol:
-        max-age: 2000
+        max-age: -1
 
 eureka:
   instance:

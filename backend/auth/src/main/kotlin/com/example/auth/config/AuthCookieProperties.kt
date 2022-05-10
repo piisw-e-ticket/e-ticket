@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 class AuthCookieProperties(
     var name: String = "AuthCookie",
     var durationInMinutes: Long = 15,
-    var secure: Boolean = true,
+    var secure: Boolean = false,
     var sameSite: SameSite = SameSite.Strict,
     var httpOnly: Boolean = true,
     var path: String = "/",

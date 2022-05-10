@@ -12,4 +12,24 @@ export class HomeComponent {
   constructor(private readonly activatedRoute: ActivatedRoute) {
     console.log(activatedRoute);
   }
+
+  register() {
+    fetch('/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username: 'rafal', password: 'pass', email: 'rafal@example.com'}),
+    });
+  }
+
+  login() {
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username: 'rafal', password: 'pass'}),
+    });
+  }
 }
