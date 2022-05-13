@@ -4,6 +4,7 @@ import com.example.auth.config.AuthCookieProperties
 import com.example.auth.dto.JwtTokenPairDto
 import com.example.auth.dto.LoginDto
 import com.example.auth.dto.RegisterDto
+import com.example.auth.error.UnauthorizedException
 import com.example.auth.model.AuthCookie
 import com.example.auth.model.TokenFamily
 import com.example.auth.model.TokenPair
@@ -12,7 +13,6 @@ import com.example.auth.service.TokenFamilyService
 import com.example.auth.service.UserService
 import com.example.auth.service.impl.JwtUtil
 import io.jsonwebtoken.Claims
-import org.apache.http.auth.InvalidCredentialsException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -61,16 +61,16 @@ class AuthController(
 
         val tokenFamily = tokenFamilyService.getById(familyId)
         if (tokenFamily.isInvalidated)
-            throw InvalidCredentialsException("Token family is invalidated")
+            throw UnauthorizedException("Token family is invalidated")
 
         if (Date().after(claims.expiration)) {
             tokenFamilyService.invalidate(tokenFamily)
-            throw InvalidCredentialsException("Refresh token is expired")
+            throw UnauthorizedException("Refresh token is expired")
         }
 
         if (tokenFamily.validToken != refreshToken) {
             tokenFamilyService.invalidate(tokenFamily)
-            throw InvalidCredentialsException("Refresh token has already been used")
+            throw UnauthorizedException("Refresh token has already been used")
         }
 
         val loggedInUser = userService.getUserByUsername(claims.subject)
