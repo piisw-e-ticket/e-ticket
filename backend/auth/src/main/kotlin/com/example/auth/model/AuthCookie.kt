@@ -11,10 +11,11 @@ class AuthCookie(
     val path: String = "/",
 ) {
     fun asHeaderValue(): String {
-        var value = "${name}=${accessToken.token}"
-        value += "; Max-Age=${accessToken.expiresAt.minusSeconds(Instant.now().epochSecond)}"
-        value += "; Path=${path}"
-        value += "; SameSite=${sameSite.name}"
+        var value = "${name}=${accessToken.token}" +
+                "; Max-Age=${accessToken.expiresAt.minusSeconds(Instant.now().epochSecond)}" +
+                "; Path=${path}" +
+                "; SameSite=${sameSite.name}"
+
         if (secure)
             value += "; Secure"
         if (httpOnly)
