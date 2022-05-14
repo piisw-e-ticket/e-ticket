@@ -25,7 +25,8 @@ eureka:
 
 jwt:
   secret: "secret"
-  expireTime: 900000
+  accessTokenMaxAgeInMinutes: 5
+  refreshTokenMaxAgeInMinutes: 4320
 
 management:
   endpoints:
