@@ -23,7 +23,15 @@ class UserServiceImpl(
 
     override fun userExistsByUsername(username: String): Boolean = userRepository.existsByUsername(username)
 
+    override fun userExistsByEmail(email: String): Boolean = userRepository.existsByEmail(email)
+
     override fun registerUser(registerDto: RegisterDto): User {
+        if (userExistsByUsername(registerDto.username))
+            throw IllegalArgumentException("User with username '${registerDto.username}' already exists.")
+
+        if (userExistsByEmail(registerDto.email))
+            throw IllegalArgumentException("User with email '${registerDto.email}' already exists.")
+
         val userAccount = User(
                 registerDto.username,
                 registerDto.email,
