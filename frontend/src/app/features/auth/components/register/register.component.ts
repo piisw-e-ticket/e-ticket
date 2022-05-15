@@ -58,7 +58,6 @@ export class RegisterComponent {
       email: this.registerForm.get("email")!.value,
       password: this.registerForm.get("fullPassword.password")!.value
     } as RegisterDto;
-    console.log(registerDto);
     this.authService.register(registerDto)
       .pipe(catchError(error => of(error)))
       .subscribe(res => {

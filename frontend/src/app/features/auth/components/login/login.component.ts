@@ -28,7 +28,6 @@ export class LoginComponent {
 
   onSubmit() {
     const loginDto = this.loginForm.value as LoginDto;
-    console.log(loginDto);
     this.authService.login(loginDto)
       .pipe(catchError(error => of(error)))
       .subscribe(res => {
