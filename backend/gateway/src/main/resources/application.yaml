@@ -9,3 +9,8 @@ eureka:
   instance:
     prefer-ip-address: true
     hostname: localhost
+
+jwt:
+  secret: "secret"
+  accessTokenMaxAgeInMinutes: 5
+  refreshTokenMaxAgeInMinutes: 4320
