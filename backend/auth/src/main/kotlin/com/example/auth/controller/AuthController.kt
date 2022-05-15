@@ -9,7 +9,6 @@ import com.example.auth.model.TokenPair
 import com.example.auth.model.User
 import com.example.auth.service.TokenService
 import com.example.auth.service.UserService
-import com.example.auth.service.impl.JwtUtil
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
+import javax.validation.Valid
 
 @RestController
 class AuthController(
-        val jwtUtil: JwtUtil,
         val authCookieProperties: AuthCookieProperties,
         val userService: UserService,
         val tokenService: TokenService
@@ -39,7 +38,7 @@ class AuthController(
 
     @PostMapping("/auth/register")
     fun register(
-        @RequestBody registerDto: RegisterDto,
+        @Valid @RequestBody registerDto: RegisterDto,
         @RequestParam(required = false) setCookie: Boolean = false
     ): ResponseEntity<JwtTokenPairDto> {
         val registeredUser = userService.registerUser(registerDto)
