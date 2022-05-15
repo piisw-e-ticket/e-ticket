@@ -36,7 +36,7 @@ class AuthControllerTest {
 
         // when
         sleep(1000)
-        val response = sut.refresh(tokenPairDto.refreshToken, setCookie = true)
+        val response = sut.refresh("Bearer " + tokenPairDto.refreshToken, setCookie = true)
 
         // then
         assertThat(response.statusCode, equalTo(HttpStatus.OK))
