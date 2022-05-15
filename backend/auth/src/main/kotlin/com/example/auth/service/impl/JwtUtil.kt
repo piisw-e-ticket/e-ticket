@@ -25,15 +25,6 @@ class JwtUtil(
         return TokenPair(accessToken, refreshToke)
     }
 
-    fun validateToken(authToken: String?): Boolean {
-        return try {
-            Jwts.parser().setSigningKey(jwtProperties.secret).parseClaimsJws(authToken)
-            true
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
-
     fun getClaims(token: String?): Claims? {
         return try {
             Jwts.parser().setSigningKey(jwtProperties.secret).parseClaimsJws(token).body

@@ -6,13 +6,13 @@ class AuthCookie(
     val name: String = "AuthCookie",
     val accessToken: Token,
     val secure: Boolean = false,
-    val sameSite: SameSite = SameSite.Strict,
+    val sameSite: SameSite = SameSite.None,
     val httpOnly: Boolean = true,
     val path: String = "/",
 ) {
     fun asHeaderValue(): String {
         var value = "${name}=${accessToken.token}" +
-                "; Max-Age=${accessToken.expiresAt.minusSeconds(Instant.now().epochSecond)}" +
+                "; Max-Age=${accessToken.expiresAt.minusSeconds(Instant.now().epochSecond).epochSecond}" +
                 "; Path=${path}" +
                 "; SameSite=${sameSite.name}"
 

@@ -17,7 +17,7 @@ class JwtFilter(
     val jwtUtil: JwtUtil
 ): GatewayFilter {
 
-    private val notSecuredApiEndpoints = listOf("/register", "/login")
+    private val allowedEndpoints = listOf("/register", "/login", "/refresh")
 
     override fun filter(exchange: ServerWebExchange?, chain: GatewayFilterChain?): Mono<Void> {
         val request: ServerHttpRequest = exchange!!.request
@@ -37,7 +37,7 @@ class JwtFilter(
         return chain!!.filter(exchange)
     }
 
-    private fun isRequestSecured(request: ServerHttpRequest) = notSecuredApiEndpoints.stream()
+    private fun isRequestSecured(request: ServerHttpRequest) = allowedEndpoints.stream()
         .noneMatch { uri: String? -> request.uri.path.contains(uri!!) }
 
     private fun getTokenFromRequest(request: ServerHttpRequest): String? = when {
@@ -50,7 +50,7 @@ class JwtFilter(
 
     private fun parseTokenFromHeader(header: String): String? {
         return if (header.lowercase().startsWith("bearer"))
-            header.substring(0, "bearer".length).trim()
+            header.substring("bearer".length).trim()
         else null
     }
 }
