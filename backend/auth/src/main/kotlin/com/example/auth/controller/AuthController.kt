@@ -5,13 +5,13 @@ import com.example.auth.dto.JwtTokenPairDto
 import com.example.auth.dto.LoginDto
 import com.example.auth.dto.RegisterDto
 import com.example.auth.model.AuthCookie
-import com.example.auth.model.TokenFamily
 import com.example.auth.model.TokenPair
 import com.example.auth.model.User
 import com.example.auth.service.TokenService
 import com.example.auth.service.UserService
 import com.example.auth.service.impl.JwtUtil
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -49,15 +49,22 @@ class AuthController(
 
     @PostMapping("/auth/refresh")
     fun refresh(
-        @RequestHeader("Authorization", required = true) refreshToken: String,
+        @RequestHeader("Authorization", required = true) authHeader: String,
         @RequestParam(required = false) setCookie: Boolean = false
     ): ResponseEntity<JwtTokenPairDto> {
+        val refreshToken = authHeader.substring("bearer".length).trim()
         lateinit var user: User
         val tokenPair = tokenService.createTokenPairUsingRefreshToken(refreshToken) { username ->
             userService.getUserByUsername(username).apply { user = this }
         }
 
         return createResponse(user, tokenPair, setCookie)
+    }
+
+    // TODO this is temporary endpoint to check token validation.
+    @GetMapping("/auth/info")
+    fun getInfo(@RequestHeader("username") username: String): ResponseEntity<String> {
+        return ResponseEntity.ok("Hello, $username")
     }
 
     private fun createResponse(
