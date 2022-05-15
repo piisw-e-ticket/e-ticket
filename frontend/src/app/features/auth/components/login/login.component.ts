@@ -3,6 +3,8 @@ import { AuthService } from '../../services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginDto } from '../../models/loginDto';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -19,10 +21,21 @@ export class LoginComponent {
     password: new FormControl('', [Validators.required]),
   });
 
+  error: String | null = null;
+  
+  get username() { return this.loginForm.get("username") }
+  get password() { return this.loginForm.get("password") }
+
   onSubmit() {
     const loginDto = this.loginForm.value as LoginDto;
     console.log(loginDto);
-    this.authService.login(loginDto).subscribe(() => this.router.navigateByUrl('/aut/profile'));
+    this.authService.login(loginDto)
+      .pipe(catchError(error => of(error)))
+      .subscribe(res => {
+        if (res instanceof HttpErrorResponse) {
+          this.error = res.error;
+        }
+        else this.router.navigateByUrl('/aut/profile')
+      });
   }
-
 }

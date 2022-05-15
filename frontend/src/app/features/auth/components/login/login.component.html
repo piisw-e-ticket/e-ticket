@@ -5,13 +5,24 @@
     <mat-form-field appearance="fill">
         <mat-label for="username">Username</mat-label>
         <input id="username" type="text" formControlName="username" matInput>
+        <mat-error *ngIf="username?.hasError('required')">
+            Username is required!
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
         <mat-label for="password">Password</mat-label>
         <input id="password" type="password" formControlName="password" matInput>
+        <mat-error *ngIf="password?.hasError('required')">
+            Password is required!
+        </mat-error>
     </mat-form-field>
-  
-    <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Submit</button>
+
+    <mat-error *ngIf="error">{{error}}</mat-error>
+
+    <div class="button-panel">
+        <button mat-raised-button type="button" routerLink="/aut/register">Register</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Submit</button>
+    </div>
 
 </form>

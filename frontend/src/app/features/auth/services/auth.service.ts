@@ -52,9 +52,4 @@ export class AuthService {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("expiresAt");
   }
-
-  // getUserInfo(): Observable<UserDto | null> {
-  //   if (this.user !== undefined) return of(this.user);
-  //   return of(null);
-  // }
 }
