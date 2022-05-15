@@ -7,8 +7,10 @@ import com.example.auth.model.User
 import com.example.auth.service.TokenFamilyService
 import com.example.auth.service.TokenService
 import io.jsonwebtoken.Claims
+import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class TokenServiceImpl(
     private val tokenFamilyService: TokenFamilyService,
     private val jwtUtil: JwtUtil

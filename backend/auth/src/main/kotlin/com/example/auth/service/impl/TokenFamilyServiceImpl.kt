@@ -11,11 +11,7 @@ class TokenFamilyServiceImpl(
     val repository: TokenFamilyRepository
 ) : TokenFamilyService {
 
-    override fun getById(id: String): TokenFamily? = try {
-        repository.getById(id)
-    } catch (e: ObjectRetrievalFailureException) {
-        null
-    }
+    override fun getById(id: String): TokenFamily? = repository.findById(id).orElseGet { null }
 
     override fun save(tokenFamily: TokenFamily) {
         if (tokenFamily.validToken == null)
