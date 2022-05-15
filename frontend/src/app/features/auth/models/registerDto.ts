@@ -1,5 +1,5 @@
 export interface RegisterDto {
-    username: String,
-    password: String,
-    email: String
+    username: string,
+    password: string,
+    email: string
 }

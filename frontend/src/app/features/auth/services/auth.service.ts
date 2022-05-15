@@ -1,38 +1,60 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { LoginDto } from '../models/loginDto';
 import { RegisterDto } from '../models/registerDto';
 import { UserDto } from '../models/userDto';
+import { HttpClient } from '@angular/common/http';
+import * as moment from "moment";
+import { shareReplay, tap } from 'rxjs/operators';
+import { AuthResultDto } from '../models/authResultDto';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private user: UserDto | null | undefined;
-
-  constructor(private router: Router) {
+  constructor(private http: HttpClient) {
 
   }
 
-  login(loginDto: LoginDto) {
-    this.user = loginDto as UserDto;
-    return this.router.navigate(["/auth/profile"]);
+  private setSession(authResult: AuthResultDto) {
+    localStorage.setItem('refreshToken', authResult.refreshToken);
+    localStorage.setItem('expiresAt', authResult.accessTokenExpirationDate);
   }
 
-  register(registerDto: RegisterDto) {
-    this.user = registerDto as UserDto;
-    return this.router.navigate(["/auth/profile"]);
+  private isExpired(): boolean {
+    const expiration = localStorage.getItem("expiresAt");
+    return expiration ? moment().isAfter(expiration) : true;
   }
 
-  logout() {
-    this.user = null;
-    return this.router.navigate(["/auth/login"]);
+  isLoggedIn(): boolean {
+    return !this.isExpired();
   }
 
-  getUserInfo(): Observable<UserDto | null> {
-    if (this.user !== undefined) return of(this.user);
-    return of(null);
+  login(loginDto: LoginDto): Observable<AuthResultDto> {
+    return this.http.post<AuthResultDto>("/auth/login?setCookie=true", loginDto)
+      .pipe(
+        tap(res => this.setSession(res)),
+        shareReplay()
+      );
   }
+
+  register(registerDto: RegisterDto): Observable<AuthResultDto> {
+    return this.http.post<AuthResultDto>("/auth/register?setCookie=true", registerDto)
+      .pipe(
+        tap(res => this.setSession(res)),
+        shareReplay()
+      )
+  }
+
+  logout(): void {
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("expiresAt");
+  }
+
+  // getUserInfo(): Observable<UserDto | null> {
+  //   if (this.user !== undefined) return of(this.user);
+  //   return of(null);
+  // }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RegisterDto } from '../../models/registerDto';
 import { AuthService } from '../../services/auth.service';
 
@@ -10,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   registerForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -19,10 +20,10 @@ export class RegisterComponent {
     confirmPassword: new FormControl('', [Validators.required])
   });
 
-  async onSubmit() {
+  onSubmit() {
     const registerDto = this.registerForm.value as RegisterDto;
     console.log(registerDto);
-    await this.authService.register(registerDto);
+    this.authService.register(registerDto).subscribe(() => this.router.navigateByUrl('/aut/profile'));
   }
 
 }

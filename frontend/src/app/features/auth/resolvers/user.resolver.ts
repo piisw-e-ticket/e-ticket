@@ -18,6 +18,7 @@ export class UserResolver implements Resolve<UserDto> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UserDto> {
-    return this.authService.getUserInfo().pipe(map(user => user!));
+    // return this.authService.getUserInfo().pipe(map(user => user!));
+    return of({username: "aaa"} as UserDto);
   }
 }

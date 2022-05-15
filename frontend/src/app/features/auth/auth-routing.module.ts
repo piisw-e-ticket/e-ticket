@@ -1,4 +1,6 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { LoginComponent } from './components/login/login.component';
@@ -9,12 +11,12 @@ import { UserResolver } from './resolvers/user.resolver';
 
 const routes: Routes = [
   {
-    path: "auth",
+    path: "aut",
     pathMatch: "full",
-    redirectTo: "/auth/login"
+    redirectTo: "/aut/login"
   },
   {
-    path: "auth",
+    path: "aut",
     component: AuthComponent,
     children: [
       {
@@ -28,9 +30,6 @@ const routes: Routes = [
       {
         path: "profile",
         component: ProfileComponent,
-        resolve: {
-          user: UserResolver
-        },
         canActivate: [
           AuthenticatedGuard
         ]
@@ -40,7 +39,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    HttpClientModule
+  ],
   exports: [RouterModule]
 })
 export class AuthRoutingModule { }
