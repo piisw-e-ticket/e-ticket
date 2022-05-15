@@ -17,7 +17,7 @@ class JwtFilter(
     val jwtUtil: JwtUtil
 ): GatewayFilter {
 
-    private val allowedEndpoints = listOf("/register", "/login")
+    private val allowedEndpoints = listOf("/register", "/login", "/refresh")
 
     override fun filter(exchange: ServerWebExchange?, chain: GatewayFilterChain?): Mono<Void> {
         val request: ServerHttpRequest = exchange!!.request
