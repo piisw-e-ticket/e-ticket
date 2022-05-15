@@ -17,7 +17,7 @@ class User(
     var active: Boolean = true
 
     @ElementCollection(fetch = FetchType.EAGER)
-    val roles: MutableList<Role> = ArrayList()
+    val roles: MutableSet<Role> = mutableSetOf()
 
 }
 
