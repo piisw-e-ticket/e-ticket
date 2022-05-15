@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { UserDto } from '../../models/userDto';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
+  constructor(private authService: AuthService, private router: Router) {
 
-  user!: UserDto;
-
-  constructor(private route: ActivatedRoute) { }
-
-  ngOnInit(): void {
-    // this.user = this.route.snapshot.data["user"];
   }
 
+  onLogout() {
+    this.authService.logout();
+    this.router.navigateByUrl("/aut/login");
+  }
 }
