@@ -3,6 +3,7 @@ package com.example.auth.service.impl
 import com.example.auth.model.TokenFamily
 import com.example.auth.repository.TokenFamilyRepository
 import com.example.auth.service.TokenFamilyService
+import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.stereotype.Service
 
 @Service
@@ -10,7 +11,11 @@ class TokenFamilyServiceImpl(
     val repository: TokenFamilyRepository
 ) : TokenFamilyService {
 
-    override fun getById(id: String) = repository.getById(id)
+    override fun getById(id: String): TokenFamily? = try {
+        repository.getById(id)
+    } catch (e: ObjectRetrievalFailureException) {
+        null
+    }
 
     override fun save(tokenFamily: TokenFamily) {
         if (tokenFamily.validToken == null)
