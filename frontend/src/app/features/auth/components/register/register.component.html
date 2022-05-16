@@ -1,0 +1,50 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+    <h1>Register</h1>
+
+    <mat-form-field appearance="fill">
+        <mat-label for="username">Username</mat-label>
+        <input id="username" type="text" formControlName="username" matInput>
+        <mat-error *ngIf="username?.hasError('required')">
+            Username is required!
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label for="email">Email</mat-label>
+        <input id="email" type="email" formControlName="email" matInput>
+        <mat-error *ngIf="email?.hasError('required')">
+            Email is required!
+        </mat-error>
+        <mat-error *ngIf="email?.hasError('email')">
+            Email should be email!
+        </mat-error>
+    </mat-form-field>
+
+    <div class="fullPassword" formGroupName="fullPassword">
+        <mat-form-field appearance="fill">
+            <mat-label for="password">Password</mat-label>
+            <input id="password" type="password" formControlName="password" matInput>
+            <mat-error *ngIf="password?.hasError('required')">
+                Password is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label for="confirmPassword">Confirm password</mat-label>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword" [errorStateMatcher]="matcher" matInput>
+            <mat-error *ngIf="confirmPassword?.hasError('required')">
+                Confirm the password!
+            </mat-error>
+            <mat-error *ngIf="!confirmPassword?.hasError('required') && fullPassword?.hasError('notSame')">
+                Passwords do not match!
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="button-panel">
+        <button mat-raised-button type="button" routerLink="/aut/login">Login</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">Submit</button>
+    </div>
+
+</form>

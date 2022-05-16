@@ -1,0 +1,31 @@
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+}
+
+mat-form-field {
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+button {
+    width: 120px;
+}
+
+button:first-of-type {
+    margin-right: 2rem;
+}
+
+.button-panel {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form>mat-error {
+    margin: 1rem 0;
+}
