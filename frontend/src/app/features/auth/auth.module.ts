@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RegisterComponent } from './components/register/register.component';
+import { SessionKeeperInterceptor } from './interceptors/session-keeper.interceptor';
 
 
 @NgModule({
