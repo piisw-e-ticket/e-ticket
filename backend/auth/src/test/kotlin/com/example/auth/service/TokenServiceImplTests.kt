@@ -32,7 +32,7 @@ class TokenServiceImplTests {
 
         // when
         val actualTokenPair = sut.createTokenPair(
-            User("test.user", "test.user@example.com", "password"))
+            Passenger("test.user", "test.user@example.com", "password"))
 
         // then
         assertThat(actualTokenPair, equalTo(expectedTokenPair))
@@ -60,7 +60,7 @@ class TokenServiceImplTests {
 
         // when
         val actualTokenPair = sut.createTokenPair(
-            User("test.user", "test.user@example.com", "password"),
+            Passenger("test.user", "test.user@example.com", "password"),
             tokenFamily)
 
         // then
@@ -84,7 +84,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("malformed.token") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -104,7 +104,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("token.without.family") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -128,7 +128,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -152,7 +152,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -179,7 +179,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -208,7 +208,7 @@ class TokenServiceImplTests {
 
         // when
         val act = { sut.createTokenPairUsingRefreshToken("used.token") { username ->
-            User(username, "test.user@example.com", "password")
+            Passenger(username, "test.user@example.com", "password")
         } }
 
         // then
@@ -241,13 +241,13 @@ class TokenServiceImplTests {
         Mockito.`when`(tokenFamilyServiceMock.getById(tokenFamily.id))
             .then { tokenFamily }
 
-        lateinit var expectedUser: User
+        lateinit var expectedUser: ETicketUser
 
         val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
 
         // when
         val tokenPair = sut.createTokenPairUsingRefreshToken(validToken) { username ->
-            User(username, "test.user@example.com", "password").apply { expectedUser = this }
+            Passenger(username, "test.user@example.com", "password").apply { expectedUser = this }
         }
 
         // then
