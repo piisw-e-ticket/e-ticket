@@ -26,6 +26,6 @@ data class JwtTokenPairDto(
     val accessTokenExpirationDate: Date,
     val refreshToken: String,
     val refreshTokenExpirationDate: Date,
-    val roles: Set<Role>,
+    val roles: Role,
     val type: String = "Bearer"
 )

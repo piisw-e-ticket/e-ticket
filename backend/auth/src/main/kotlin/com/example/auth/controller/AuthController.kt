@@ -87,7 +87,7 @@ class AuthController(
             Date.from(tokenPair.accessToken.expiresAt),
             tokenPair.refreshToken.token,
             Date.from(tokenPair.refreshToken.expiresAt),
-            user.roles
+            user.role
         ))
     }
 }

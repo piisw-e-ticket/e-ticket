@@ -2,7 +2,6 @@ package com.example.auth.service.impl
 
 import com.example.auth.dto.LoginDto
 import com.example.auth.dto.RegisterDto
-import com.example.auth.model.Role
 import com.example.auth.model.User
 import com.example.auth.repository.UserRepository
 import com.example.auth.service.UserService
@@ -37,7 +36,6 @@ class UserServiceImpl(
                 registerDto.email,
                 encoder.encode(registerDto.password)
         )
-        userAccount.roles.add(Role.PASSENGER)
         return userRepository.save(userAccount)
     }
 
