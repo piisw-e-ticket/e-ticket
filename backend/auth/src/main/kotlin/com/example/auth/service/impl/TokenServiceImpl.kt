@@ -3,7 +3,7 @@ package com.example.auth.service.impl
 import com.example.auth.error.UnauthorizedException
 import com.example.auth.model.TokenFamily
 import com.example.auth.model.TokenPair
-import com.example.auth.model.User
+import com.example.auth.model.ETicketUser
 import com.example.auth.service.TokenFamilyService
 import com.example.auth.service.TokenService
 import io.jsonwebtoken.Claims
@@ -16,7 +16,7 @@ class TokenServiceImpl(
     private val jwtUtil: JwtUtil
 ) : TokenService {
 
-    override fun createTokenPair(user: User, tokenFamily: TokenFamily?): TokenPair {
+    override fun createTokenPair(user: ETicketUser, tokenFamily: TokenFamily?): TokenPair {
         val family = tokenFamily ?: TokenFamily()
 
         val tokenPair = jwtUtil.generateTokenPair(user.username, family.id)
@@ -28,7 +28,7 @@ class TokenServiceImpl(
 
     override fun createTokenPairUsingRefreshToken(
         refreshToken: String,
-        provideUser: (String) -> User
+        provideUser: (String) -> ETicketUser
     ): TokenPair {
         val claims: Claims = jwtUtil.getClaims(refreshToken)
             ?: throw IllegalArgumentException("Refresh token is malformed")

@@ -6,7 +6,7 @@ import com.example.auth.dto.LoginDto
 import com.example.auth.dto.RegisterDto
 import com.example.auth.model.AuthCookie
 import com.example.auth.model.TokenPair
-import com.example.auth.model.User
+import com.example.auth.model.ETicketUser
 import com.example.auth.service.TokenService
 import com.example.auth.service.UserService
 import org.springframework.http.ResponseEntity
@@ -52,7 +52,7 @@ class AuthController(
         @RequestParam(required = false) setCookie: Boolean = false
     ): ResponseEntity<JwtTokenPairDto> {
         val refreshToken = authHeader.substring("bearer".length).trim()
-        lateinit var user: User
+        lateinit var user: ETicketUser
         val tokenPair = tokenService.createTokenPairUsingRefreshToken(refreshToken) { username ->
             userService.getUserByUsername(username).apply { user = this }
         }
@@ -67,9 +67,9 @@ class AuthController(
     }
 
     private fun createResponse(
-        user: User,
-        tokenPair: TokenPair,
-        setCookie: Boolean
+            user: ETicketUser,
+            tokenPair: TokenPair,
+            setCookie: Boolean
     ): ResponseEntity<JwtTokenPairDto> {
         val response = ResponseEntity.ok()
         if (setCookie)
