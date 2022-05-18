@@ -16,8 +16,7 @@ class User(
 
     var active: Boolean = true
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    val roles: MutableSet<Role> = mutableSetOf()
+    var role: Role = Role.PASSENGER
 
 }
 
