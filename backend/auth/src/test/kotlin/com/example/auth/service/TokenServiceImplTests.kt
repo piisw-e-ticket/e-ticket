@@ -1,260 +1,237 @@
 package com.example.auth.service
 
 import com.example.auth.error.UnauthorizedException
-import com.example.auth.model.*
+import com.example.auth.model.ETicketUser
+import com.example.auth.model.TokenFamily
+import com.example.auth.model.TokenPair
 import com.example.auth.service.impl.JwtUtil
 import com.example.auth.service.impl.TokenServiceImpl
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.Claims
+import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.SpyK
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import java.time.Instant
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.assertThrows
 import java.util.*
-
+import javax.persistence.EntityNotFoundException
 
 class TokenServiceImplTests {
-    @Test
-    fun createTokenPair_NoTokenFamilyProvided_TokenPairWithNewTokenFamily() {
-        // given
-        val expectedTokenPair = TokenPair(
-            Token("access.token", Instant.now()),
-            Token("refresh.token", Instant.now()))
 
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.generateTokenPair(Mockito.anyString(), Mockito.anyString()))
-            .then { expectedTokenPair }
+    @MockK
+    private lateinit var tokenFamilyService: TokenFamilyService
 
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
+    @MockK
+    private lateinit var jwtUtil: JwtUtil
 
-        // when
-        val actualTokenPair = sut.createTokenPair(
-            Passenger("test.user", "test.user@example.com", "password"))
+    @SpyK
+    @InjectMockKs
+    private lateinit var tokenService: TokenServiceImpl
 
-        // then
-        assertThat(actualTokenPair, equalTo(expectedTokenPair))
-
-        argumentCaptor<TokenFamily>().apply {
-            Mockito.verify(tokenFamilyServiceMock).save(capture())
-            assertThat(firstValue.validToken, equalTo(expectedTokenPair.refreshToken.token))
-        }
+    @BeforeEach
+    fun composeMocks() {
+        MockKAnnotations.init(this)
     }
 
     @Test
-    fun createTokenPair_TokenFamilyProvided_TokenPairWithExistingTokenFamily() {
+    fun `createTokenPair returns token pair and creates new family on no family provided`() {
         // given
-        val expectedTokenPair = TokenPair(
-            Token("access.token", Instant.now()),
-            Token("refresh.token", Instant.now()))
-        val tokenFamily = TokenFamily()
-
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.generateTokenPair(Mockito.anyString(), Mockito.anyString()))
-            .then { expectedTokenPair }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
-
-        // when
-        val actualTokenPair = sut.createTokenPair(
-            Passenger("test.user", "test.user@example.com", "password"),
-            tokenFamily)
-
-        // then
-        assertThat(actualTokenPair, equalTo(expectedTokenPair))
-
-        argumentCaptor<TokenFamily>().apply {
-            Mockito.verify(tokenFamilyServiceMock).save(capture())
-            assertThat(firstValue, equalTo(tokenFamily))
-        }
-    }
-
-    @Test
-    fun createTokenPairUsingRefreshToken_MalformedToken_IllegalArgumentException() {
-        // given
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { null }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
-
-        // when
-        val act = { sut.createTokenPairUsingRefreshToken("malformed.token") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
-
-        // then
-        val exception = assertThrows<java.lang.IllegalArgumentException> { act() }
-        assertThat(exception.message, containsString("malformed"))
-    }
-
-    @Test
-    fun createTokenPairUsingRefreshToken_TokenWithoutFamily_IllegalArgumentException() {
-        // given
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims() }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
-
-        // when
-        val act = { sut.createTokenPairUsingRefreshToken("token.without.family") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
-
-        // then
-        val exception = assertThrows<java.lang.IllegalArgumentException> { act() }
-        assertThat(exception.message, stringContainsInOrder("must", "token", "family"))
-    }
-
-    @Test
-    fun createTokenPairUsingRefreshToken_TokenWithNonExistentFamily_IllegalArgumentException() {
-        // given
-        val nonExistentTokenFamilyId = "NonExistentFamilyId"
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims().apply { set("fid", nonExistentTokenFamilyId) } }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        Mockito.`when`(tokenFamilyServiceMock.getById(nonExistentTokenFamilyId))
-            .then { null }
-
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
-
-        // when
-        val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
-
-        // then
-        val exception = assertThrows<java.lang.IllegalArgumentException> { act() }
-        assertThat(exception.message?.lowercase(), stringContainsInOrder("token", "family", "not", "exist"))
-    }
-
-    @Test
-    fun createTokenPairUsingRefreshToken_TokenFamilyIsInvalidated_UnauthorizedException() {
-        // given
-        val tokenFamily = TokenFamily().apply { isInvalidated = true }
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims().apply { set("fid", tokenFamily.id) } }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        Mockito.`when`(tokenFamilyServiceMock.getById(tokenFamily.id))
-            .then { tokenFamily }
-
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
-
-        // when
-        val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
-
-        // then
-        val exception = assertThrows<UnauthorizedException> { act() }
-        assertThat(exception.message?.lowercase(), stringContainsInOrder("token", "family", "invalidated"))
-    }
-
-    @Test
-    fun createTokenPairUsingRefreshToken_TokenIsExpired_UnauthorizedException() {
-        // given
-        val tokenFamily = TokenFamily()
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims()
-                .setExpiration(Date.from(Instant.now().minusMillis(100)))
-                .apply { set("fid", tokenFamily.id) }
+        val expectedTokenPair = mockk<TokenPair> {
+            every { refreshToken } returns mockk {
+                every { token } returns "refresh.token"
             }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        Mockito.`when`(tokenFamilyServiceMock.getById(tokenFamily.id))
-            .then { tokenFamily }
-
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
+        }
+        val mockUser = mockk<ETicketUser> {
+            every { username } returns "username"
+        }
+        val captor = CapturingSlot<TokenFamily>()
+        every { jwtUtil.generateTokenPair(any(), any()) } returns expectedTokenPair
+        every { tokenFamilyService.save(capture(captor)) } returnsArgument 0
 
         // when
-        val act = { sut.createTokenPairUsingRefreshToken("token") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
+        val actualTokenPair = tokenService.createTokenPair(mockUser)
 
         // then
-        val exception = assertThrows<UnauthorizedException> { act() }
-        assertThat(exception.message?.lowercase(), stringContainsInOrder("token", "is", "expired"))
-        Mockito.verify(tokenFamilyServiceMock).invalidate(tokenFamily)
+        assertAll(
+                { assertThat(captor.captured.validToken).isEqualTo(expectedTokenPair.refreshToken.token) },
+                { assertThat(actualTokenPair).isEqualTo(expectedTokenPair) }
+        )
     }
 
     @Test
-    fun createTokenPairUsingRefreshToken_TokenIsUsed_UnauthorizedException() {
+    fun `createTokenPair returns token pair and uses family provided`() {
+        // given
+        val expectedTokenPair = mockk<TokenPair> {
+            every { refreshToken } returns mockk {
+                every { token } returns "refresh.token"
+            }
+        }
+        val tokenFamily = TokenFamily()
+        val mockUser = mockk<ETicketUser> {
+            every { username } returns "username"
+        }
+        val captor = CapturingSlot<TokenFamily>()
+        every { jwtUtil.generateTokenPair(any(), any()) } returns expectedTokenPair
+        every { tokenFamilyService.save(capture(captor)) } returnsArgument 0
+
+        // when
+        val actualTokenPair = tokenService.createTokenPair(mockUser, tokenFamily)
+
+        // then
+        assertAll(
+                { assertThat(captor.captured).isEqualTo(tokenFamily) },
+                { assertThat(actualTokenPair).isEqualTo(expectedTokenPair) }
+        )
+    }
+
+    @Test
+    fun `createTokenPairUsingRefreshToken throws an exception on malformed token`() {
+        // given
+        every { jwtUtil.getClaims(any()) } throws IllegalArgumentException("Refresh token is malformed")
+
+        // when
+        val act = {
+            tokenService.createTokenPairUsingRefreshToken("malformed.token") { _ -> mockk() }
+        }
+
+        // then
+        val exception = assertThrows(IllegalArgumentException::class.java) { act() }
+        assertThat(exception.message).isEqualTo("Refresh token is malformed")
+    }
+
+    @Test
+    fun `createTokenPairUsingRefreshToken throws an exception on token without a family`() {
+        // given
+        val claimsMock = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns null
+        }
+        val expectedException = IllegalArgumentException("Refresh token must come from a token family.")
+        every { jwtUtil.getClaims(any()) } returns claimsMock
+
+        // when
+        val act = { tokenService.createTokenPairUsingRefreshToken("token.without.family") { _ -> mockk() } }
+
+        // then
+        val actualException = assertThrows(IllegalArgumentException::class.java) { act() }
+        assertThat(actualException.message).isEqualTo(expectedException.message)
+    }
+
+    @Test
+    fun `createTokenPairUsingRefreshToken throws an exception on non-existing family`() {
+        // given
+        val claimsMock = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns "family.id"
+        }
+        val expectedException = EntityNotFoundException("Could not find token family with id 'family.id'.")
+        every { jwtUtil.getClaims(any()) } returns claimsMock
+        every { tokenFamilyService.getById(any()) } throws expectedException
+
+        // when
+        val act = { tokenService.createTokenPairUsingRefreshToken("token.with.invalid.family") { _ -> mockk() } }
+
+        // then
+        val actualException = assertThrows(EntityNotFoundException::class.java) { act() }
+        assertThat(actualException.message).isEqualTo(expectedException.message)
+    }
+
+
+    @Test
+    fun `createTokenPairUsingRefreshToken throws exception on invalidated family`() {
+        // given
+        val tokenFamily = TokenFamily().apply {
+            id = "family.id"
+            isInvalidated = true
+        }
+        val mockClaims = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns "family.id"
+        }
+        val expectedException = UnauthorizedException("Token family is invalidated.")
+        every { jwtUtil.getClaims(any()) } returns mockClaims
+        every { tokenFamilyService.getById("family.id") } returns tokenFamily
+
+        // when
+        val act = { tokenService.createTokenPairUsingRefreshToken("token.with.invalidated.family") { _ -> mockk() } }
+
+        // then
+        val actualException = assertThrows(UnauthorizedException::class.java) { act() }
+        assertThat(actualException.message).isEqualTo(expectedException.message)
+    }
+
+    @Test
+    fun `createTokenPairUsingRefreshToken invalidates family and throws exception on expired token`() {
+        // given
+        val tokenFamily = TokenFamily()
+        val mockClaims = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns "family.id"
+            every { expiration } returns Date.from(Instant.now().minusMillis(100))
+        }
+        val expectedException = UnauthorizedException("Refresh token is expired.")
+        every { jwtUtil.getClaims(any()) } returns mockClaims
+        every { tokenFamilyService.getById(any()) } returns tokenFamily
+        every { tokenFamilyService.invalidate(any()) } just runs
+
+        // when
+        val act = { tokenService.createTokenPairUsingRefreshToken("expired.token") { _ -> mockk() } }
+
+        // then
+        val actualException = assertThrows(UnauthorizedException::class.java) { act() }
+        assertThat(actualException.message).isEqualTo(expectedException.message)
+    }
+
+    @Test
+    fun `createTokenPairUsingRefreshToken invalidates family and throws exception on used token`() {
         // given
         val tokenFamily = TokenFamily().apply { validToken = "fresh.token" }
-
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims()
-                .setExpiration(Date.from(Instant.now().plusSeconds(5)))
-                .apply { set("fid", tokenFamily.id) }
-            }
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        Mockito.`when`(tokenFamilyServiceMock.getById(tokenFamily.id))
-            .then { tokenFamily }
-
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
+        val mockClaims = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns "family.id"
+            every { expiration } returns Date.from(Instant.now().plusSeconds(100))
+        }
+        val expectedException = UnauthorizedException("Refresh token has already been used.")
+        every { jwtUtil.getClaims(any()) } returns mockClaims
+        every { tokenFamilyService.getById(any()) } returns tokenFamily
+        every { tokenFamilyService.invalidate(any()) } just runs
 
         // when
-        val act = { sut.createTokenPairUsingRefreshToken("used.token") { username ->
-            Passenger(username, "test.user@example.com", "password")
-        } }
+        val act = { tokenService.createTokenPairUsingRefreshToken("used.token") { _ -> mockk() } }
 
         // then
-        val exception = assertThrows<UnauthorizedException> { act() }
-        assertThat(exception.message?.lowercase(), stringContainsInOrder("token", "used"))
-        Mockito.verify(tokenFamilyServiceMock).invalidate(tokenFamily)
+        val actualException = assertThrows(UnauthorizedException::class.java) { act() }
+        assertThat(actualException.message).isEqualTo(expectedException.message)
     }
 
     @Test
-    fun createTokenPairUsingRefreshToken_ValidToken_TokenPairWithExistingFamily() {
+    fun `createTokenPairUsingRefresh returns token pair on valid parameters`() {
         // given
-        val expectedTokenPair = TokenPair(
-            Token("access.token", Instant.now()),
-            Token("refresh.token", Instant.now()))
         val validToken = "valid.token"
-        val tokenFamily = TokenFamily().apply { this.validToken = validToken }
-
-        val jwtUtilMock = Mockito.mock(JwtUtil::class.java)
-        Mockito.`when`(jwtUtilMock.getClaims(Mockito.anyString()))
-            .then { Jwts.claims()
-                .setExpiration(Date.from(Instant.now().plusSeconds(5)))
-                .setSubject("test.user")
-                .apply { set("fid", tokenFamily.id) }
+        val expectedTokenPair = mockk<TokenPair> {
+            every { refreshToken } returns mockk {
+                every { token } returns validToken
             }
-        Mockito.`when`(jwtUtilMock.generateTokenPair(Mockito.anyString(), Mockito.anyString()))
-            .then { expectedTokenPair }
-
-
-        val tokenFamilyServiceMock = Mockito.mock(TokenFamilyService::class.java)
-        Mockito.`when`(tokenFamilyServiceMock.getById(tokenFamily.id))
-            .then { tokenFamily }
-
-        lateinit var expectedUser: ETicketUser
-
-        val sut = TokenServiceImpl(tokenFamilyServiceMock, jwtUtilMock)
+        }
+        val tokenFamily = TokenFamily().apply { this.validToken = validToken }
+        val mockClaims = mockk<Claims> {
+            every { getOrDefault("fid", null) } returns "family.id"
+            every { expiration } returns Date.from(Instant.now().plusSeconds(100))
+            every { subject } returns "test.user"
+        }
+        val mockUser = mockk<ETicketUser>()
+        every { jwtUtil.getClaims(any()) } returns mockClaims
+        every { jwtUtil.generateTokenPair(any(), any()) } returns expectedTokenPair
+        every { tokenFamilyService.getById(any()) } returns tokenFamily
+        every { tokenService.createTokenPair(mockUser, tokenFamily) } returns expectedTokenPair
 
         // when
-        val tokenPair = sut.createTokenPairUsingRefreshToken(validToken) { username ->
-            Passenger(username, "test.user@example.com", "password").apply { expectedUser = this }
-        }
+        val tokenPair = tokenService.createTokenPairUsingRefreshToken(validToken) { _ -> mockUser }
 
         // then
-        assertThat(tokenPair, equalTo(expectedTokenPair))
-        assertThat(tokenFamily.validToken, equalTo(expectedTokenPair.refreshToken.token))
-        assertThat(expectedUser.username, equalTo("test.user"))
-        Mockito.verify(tokenFamilyServiceMock).save(tokenFamily)
+        assertAll(
+                { assertThat(tokenPair).isEqualTo(expectedTokenPair) },
+                { assertThat(tokenFamily.validToken).isEqualTo(expectedTokenPair.refreshToken.token) },
+        )
     }
 
 }
