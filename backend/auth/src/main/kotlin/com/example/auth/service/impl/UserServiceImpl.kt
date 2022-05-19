@@ -18,8 +18,8 @@ class UserServiceImpl(
 ): UserService {
 
     override fun getUserByUsername(username: String): ETicketUser =
-            userRepository.findByUsername(username).takeIf { it != null }
-                    ?: throw EntityNotFoundException("Could not find user with username '$username'")
+            userRepository.findByUsername(username)
+                    ?: throw EntityNotFoundException("Could not find user with username '$username'.")
 
     override fun userExistsByUsername(username: String): Boolean = userRepository.existsByUsername(username)
 
