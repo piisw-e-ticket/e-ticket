@@ -27,7 +27,7 @@ enum class Role {
 @Entity
 class Passenger(username: String, email: String, password: String): ETicketUser(username, email, password) {
     override val role: Role = Role.PASSENGER
-    val isEligibleForDiscount: Boolean = false
+    var isEligibleForDiscount: Boolean = false
 }
 
 @Entity
