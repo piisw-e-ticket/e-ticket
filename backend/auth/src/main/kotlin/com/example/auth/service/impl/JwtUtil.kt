@@ -25,12 +25,11 @@ class JwtUtil(
         return TokenPair(accessToken, refreshToke)
     }
 
-    fun getClaims(token: String?): Claims? {
+    fun getClaims(token: String?): Claims {
         return try {
             Jwts.parser().setSigningKey(jwtProperties.secret).parseClaimsJws(token).body
         } catch (e: Exception) {
-            println(e.message + " => " + e)
-            null
+            throw IllegalArgumentException("Refresh token is malformed.")
         }
     }
 

@@ -31,23 +31,21 @@ class TokenServiceImpl(
         provideUser: (String) -> ETicketUser
     ): TokenPair {
         val claims: Claims = jwtUtil.getClaims(refreshToken)
-            ?: throw IllegalArgumentException("Refresh token is malformed")
         val familyId: String = claims.getOrDefault("fid", null)?.toString()
-            ?: throw IllegalArgumentException("Refresh token must come from a token family")
+            ?: throw IllegalArgumentException("Refresh token must come from a token family.")
         val tokenFamily = tokenFamilyService.getById(familyId)
-            ?: throw IllegalArgumentException("Token family does not exist")
 
         if (tokenFamily.isInvalidated)
-            throw UnauthorizedException("Token family is invalidated")
+            throw UnauthorizedException("Token family is invalidated.")
 
         if (Date().after(claims.expiration)) {
             tokenFamilyService.invalidate(tokenFamily)
-            throw UnauthorizedException("Refresh token is expired")
+            throw UnauthorizedException("Refresh token is expired.")
         }
 
         if (tokenFamily.validToken != refreshToken) {
             tokenFamilyService.invalidate(tokenFamily)
-            throw UnauthorizedException("Refresh token has already been used")
+            throw UnauthorizedException("Refresh token has already been used.")
         }
 
         val user = provideUser(claims.subject)
