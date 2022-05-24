@@ -18,9 +18,12 @@ class GatewayConfig {
 
     @Bean
     fun routes(builder: RouteLocatorBuilder): RouteLocator? {
-        return builder.routes().route("auth") { p: PredicateSpec ->
-            p.path("/auth/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://auth")
-        }.build()
+        return builder.routes()
+                .route("auth") { p: PredicateSpec ->
+                    p.path("/auth/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://auth") }
+                .route("ticket") { p: PredicateSpec ->
+                    p.path("/tickets/**").filters { f: GatewayFilterSpec -> f.filter(filter) }.uri("lb://ticket") }
+                .build()
     }
 
 }
