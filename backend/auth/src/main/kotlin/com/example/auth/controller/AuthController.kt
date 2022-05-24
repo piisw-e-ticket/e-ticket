@@ -4,6 +4,7 @@ import com.example.auth.config.AuthCookieProperties
 import com.example.auth.dto.JwtTokenPairDto
 import com.example.auth.dto.LoginDto
 import com.example.auth.dto.RegisterDto
+import com.example.auth.dto.UserInfoDto
 import com.example.auth.model.AuthCookie
 import com.example.auth.model.TokenPair
 import com.example.auth.model.ETicketUser
@@ -60,10 +61,10 @@ class AuthController(
         return createResponse(user, tokenPair, setCookie)
     }
 
-    // TODO this is temporary endpoint to check token validation.
     @GetMapping("/auth/info")
-    fun getInfo(@RequestHeader("username") username: String): ResponseEntity<String> {
-        return ResponseEntity.ok("Hello, $username")
+    fun getUserInfo(@RequestHeader("username") username: String): ResponseEntity<UserInfoDto> {
+        val user = userService.getUserByUsername(username)
+        return ResponseEntity.ok(user.asUserInfoDto())
     }
 
     private fun createResponse(

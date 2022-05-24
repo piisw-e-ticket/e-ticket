@@ -1,5 +1,6 @@
 package com.example.auth.model
 
+import com.example.auth.dto.UserInfoDto
 import javax.persistence.*
 
 @Entity
@@ -9,7 +10,6 @@ abstract class ETicketUser(
     open val email: String,
     open val password: String
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0
@@ -18,6 +18,12 @@ abstract class ETicketUser(
 
     abstract val role: Role
 
+    open fun asUserInfoDto(): UserInfoDto = UserInfoDto(
+        username = this.username,
+        email = this.email,
+        role = this.role,
+        isActive = this.active
+    )
 }
 
 enum class Role {
@@ -25,17 +31,25 @@ enum class Role {
 }
 
 @Entity
-class Passenger(username: String, email: String, password: String): ETicketUser(username, email, password) {
+class Passenger(username: String, email: String, password: String) : ETicketUser(username, email, password) {
     override val role: Role = Role.PASSENGER
     var isEligibleForDiscount: Boolean = false
+
+    override fun asUserInfoDto(): UserInfoDto = UserInfoDto(
+        username = this.username,
+        email = this.email,
+        role = this.role,
+        isActive = this.active,
+        isEligibleForDiscount = this.isEligibleForDiscount
+    )
 }
 
 @Entity
-class TicketCollector(username: String, email: String, password: String): ETicketUser(username, email, password) {
+class TicketCollector(username: String, email: String, password: String) : ETicketUser(username, email, password) {
     override val role: Role = Role.TICKET_COLLECTOR
 }
 
 @Entity
-class Admin(username: String, email: String, password: String): ETicketUser(username, email, password) {
+class Admin(username: String, email: String, password: String) : ETicketUser(username, email, password) {
     override val role: Role = Role.ADMIN
 }
