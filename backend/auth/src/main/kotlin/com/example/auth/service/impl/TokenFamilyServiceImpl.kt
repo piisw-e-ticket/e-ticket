@@ -12,17 +12,21 @@ class TokenFamilyServiceImpl(
 ) : TokenFamilyService {
 
     override fun getById(id: String): TokenFamily = repository.findById(id)
-            .orElseThrow { EntityNotFoundException("Could not find token family with id '$id'.") }
+            .orElseThrow { EntityNotFoundException("Could not find token family with id '$id'") }
 
     override fun save(tokenFamily: TokenFamily) {
         if (tokenFamily.validToken == null)
-            throw IllegalArgumentException("Token family must have a valid token to be persisted")
+            throw IllegalArgumentException("Token family must have a valid token assigned to be persisted")
         repository.save(tokenFamily)
     }
 
     override fun invalidate(tokenFamily: TokenFamily) {
         tokenFamily.isInvalidated = true
         repository.save(tokenFamily)
+    }
+
+    override fun tryInvalidate(id: String) {
+        repository.findById(id).ifPresent { invalidate(it) }
     }
 
 }
