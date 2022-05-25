@@ -1,10 +1,7 @@
 package com.example.auth.controller
 
 import com.example.auth.config.AuthCookieProperties
-import com.example.auth.dto.JwtTokenPairDto
-import com.example.auth.dto.LoginDto
-import com.example.auth.dto.RegisterDto
-import com.example.auth.dto.UserInfoDto
+import com.example.auth.dto.*
 import com.example.auth.model.AuthCookie
 import com.example.auth.model.TokenPair
 import com.example.auth.model.ETicketUser
