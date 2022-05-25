@@ -13,6 +13,6 @@ abstract class Ticket(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0
 
-    abstract fun validate(courseId: Long): Boolean
+    abstract fun validate(courseId: Long): TicketValidationResult
 
 }
