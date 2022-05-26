@@ -13,6 +13,11 @@ data class UserInfoDto(
     val isEligibleForDiscount: Boolean? = null
 )
 
+data class PassengerInfoDto(
+    val email: String,
+    val isEligibleForDiscount: Boolean
+)
+
 data class JwtTokenPairDto(
     val accessToken: String,
     val accessTokenExpirationDate: Date,

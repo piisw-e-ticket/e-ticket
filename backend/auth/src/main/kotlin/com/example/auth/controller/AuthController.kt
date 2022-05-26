@@ -3,10 +3,7 @@ package com.example.auth.controller
 import com.example.auth.config.AuthCookieProperties
 import com.example.auth.dto.*
 import com.example.auth.infrastructure.RequiredRole
-import com.example.auth.model.AuthCookie
-import com.example.auth.model.ETicketUser
-import com.example.auth.model.Role
-import com.example.auth.model.TokenPair
+import com.example.auth.model.*
 import com.example.auth.service.TokenService
 import com.example.auth.service.UserService
 import org.springframework.http.ResponseEntity
@@ -58,12 +55,22 @@ class AuthController(
     }
 
     @GetMapping("/auth/info")
-    @RequiredRole(Role.PASSENGER, Role.TICKET_COLLECTOR)
     fun getUserInfo(
         @RequestHeader("username") username: String
-    ): Mono<ResponseEntity<UserInfoDto>> {
+    ): ResponseEntity<UserInfoDto> {
         val user = userService.getUserByUsername(username)
-        return Mono.just(ResponseEntity.ok(user.asUserInfoDto()))
+        return ResponseEntity.ok(user.asUserInfoDto())
+    }
+
+    @GetMapping("/auth/passenger-info/{username}")
+    @RequiredRole(Role.TICKET_COLLECTOR)
+    fun getPassengerInfo(
+        @PathVariable("username") username: String
+    ): Mono<ResponseEntity<PassengerInfoDto>> {
+        val user = userService.getUserByUsername(username)
+        if (user !is Passenger)
+            throw IllegalArgumentException("Provided username: '$username' does not belong to passenger")
+        return Mono.just(ResponseEntity.ok(user.asPassengerInfoDto()))
     }
 
     private fun createResponse(

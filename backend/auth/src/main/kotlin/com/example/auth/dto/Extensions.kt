@@ -10,3 +10,8 @@ fun ETicketUser.asUserInfoDto(): UserInfoDto = UserInfoDto(
     isActive = this.active,
     isEligibleForDiscount = (this as? Passenger)?.isEligibleForDiscount
 )
+
+fun Passenger.asPassengerInfoDto(): PassengerInfoDto = PassengerInfoDto(
+    email = this.email,
+    isEligibleForDiscount = this.isEligibleForDiscount
+)
