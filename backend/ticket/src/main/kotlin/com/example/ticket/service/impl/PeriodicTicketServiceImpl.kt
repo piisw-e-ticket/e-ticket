@@ -2,8 +2,8 @@ package com.example.ticket.service.impl
 
 import com.example.ticket.client.AuthClient
 import com.example.ticket.dto.PeriodicTicketCreateDto
-import com.example.ticket.dto.Role
 import com.example.ticket.model.PeriodicTicket
+import com.example.ticket.model.Role
 import com.example.ticket.repository.PeriodicTicketRepository
 import com.example.ticket.service.PeriodicTicketService
 import org.springframework.stereotype.Service

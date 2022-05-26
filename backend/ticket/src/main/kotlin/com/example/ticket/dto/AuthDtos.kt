@@ -1,5 +1,7 @@
 package com.example.ticket.dto
 
+import com.example.ticket.model.Role
+
 data class UserInfoDto(
     val username: String,
     val email: String,
@@ -8,6 +10,7 @@ data class UserInfoDto(
     val eligibleForDiscount: Boolean?
 )
 
-enum class Role {
-    PASSENGER, TICKET_COLLECTOR, ADMIN
-}
+data class PassengerInfoDto(
+    val email: String,
+    val eligibleForDiscount: Boolean
+)

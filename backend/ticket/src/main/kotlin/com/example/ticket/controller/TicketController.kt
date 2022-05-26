@@ -1,17 +1,22 @@
 package com.example.ticket.controller
 
 import com.example.ticket.dto.*
+import com.example.ticket.infrastructure.RequiredRole
+import com.example.ticket.model.Role
 import com.example.ticket.service.PeriodicTicketService
 import com.example.ticket.service.SingleTicketService
+import com.example.ticket.service.TicketValidationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 import javax.ws.rs.QueryParam
 
 @RestController
 @RequestMapping("/tickets")
 class TicketController(
     private val singleTicketService: SingleTicketService,
-    private val periodicTicketService: PeriodicTicketService
+    private val periodicTicketService: PeriodicTicketService,
+    private val ticketValidationService: TicketValidationService
 ) {
 
     @GetMapping
@@ -47,6 +52,17 @@ class TicketController(
     ): ResponseEntity<PeriodicTicketReadDto> {
         val ticket = periodicTicketService.createTicket(username, discounted, periodicTicketCreateDto)
         return ResponseEntity.ok(PeriodicTicketReadDto.from(ticket))
+    }
+
+    @PostMapping("/validate")
+    @RequiredRole(Role.TICKET_COLLECTOR)
+    fun validateTicket(
+        @RequestBody validateTicketDto: ValidateTicketDto
+    ) : ResponseEntity<TicketValidationResultDto> {
+        val result = ticketValidationService.validateTicket(
+            validateTicketDto.ticketId,
+            validateTicketDto.courseId)
+        return ResponseEntity.ok(result.asDto())
     }
 
 }

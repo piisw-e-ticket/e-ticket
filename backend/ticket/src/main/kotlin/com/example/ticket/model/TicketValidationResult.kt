@@ -1,12 +1,25 @@
 package com.example.ticket.model
 
-class TicketValidationResult private constructor(val isValid: Boolean, val reason: String?) {
+class TicketValidationResult private constructor(
+    val ticket: Ticket,
+    val isValid: Boolean,
+    val reason: String?
+) {
 
-    fun ensure(condition: Boolean, reason: String): TicketValidationResult =
-        if (!isValid || condition) this else TicketValidationResult(false, reason)
+    var owner: TicketOwner? = null
+        private set
+
+    fun setOwner(owner: TicketOwner): TicketValidationResult =
+        this.apply { this.owner = owner }
+
+    fun ensure(predicate: Boolean, reason: String): TicketValidationResult =
+        if (!isValid || predicate) this else TicketValidationResult(ticket, false, reason)
+
+    fun ensureIf(condition: Boolean, predicate: Boolean, reason: String): TicketValidationResult =
+        if (condition) this.ensure(predicate, reason) else this
 
     companion object {
-        fun success(): TicketValidationResult = TicketValidationResult(true, null)
+        fun success(ticket: Ticket): TicketValidationResult = TicketValidationResult(ticket,true, null)
     }
 
 }
