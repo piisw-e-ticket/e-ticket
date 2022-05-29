@@ -16,6 +16,7 @@ data class TicketsReadDto(
         )
     }
 }
+
 data class SingleTicketReadDto(
     val id: Long,
     val passengerUsername: String,
@@ -33,6 +34,7 @@ data class SingleTicketReadDto(
         )
     }
 }
+
 data class PeriodicTicketReadDto(
     val id: Long,
     val passengerUsername: String,
@@ -68,7 +70,7 @@ data class ValidateTicketDto(
 
 data class TicketValidationResultDto(
     val isValid: Boolean,
-    val reason: String?,
+    val errors: List<String>,
     val details: TicketValidationResultDetailsDto
 )
 

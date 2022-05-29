@@ -11,11 +11,11 @@ class PeriodicTicket(
         isDiscounted: Boolean = false
 ): Ticket(passengerUsername, isDiscounted) {
 
-    override fun validate(courseId: Long): TicketValidationResult {
+    override fun validate(courseId: Long): ValidationChain<PeriodicTicket> {
         val now = LocalDateTime.now()
 
-        return TicketValidationResult.success(this)
-            .ensure(now.isAfter(startDate), "Ticket validity period has not started yet.")
-            .ensure(now.isBefore(endDate), "Ticket validity period has been exceeded already.")
+        return ValidationChain.begin(this)
+            .ensure({ t -> now.isAfter(t.startDate) }, "Ticket validity period has not started yet.")
+            .ensure({ t -> now.isBefore(t.endDate) }, "Ticket validity period has been exceeded already.")
     }
 }

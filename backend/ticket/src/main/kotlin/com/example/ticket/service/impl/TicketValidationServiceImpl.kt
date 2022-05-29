@@ -1,7 +1,6 @@
 package com.example.ticket.service.impl
 
 import com.example.ticket.client.AuthClient
-import com.example.ticket.model.TicketOwner
 import com.example.ticket.model.TicketValidationResult
 import com.example.ticket.repository.TicketRepository
 import com.example.ticket.service.TicketValidationService
@@ -20,10 +19,14 @@ class TicketValidationServiceImpl(
         val passengerInfo = authClient.getPassengerInfo(ticket.passengerUsername)
 
         return ticket.validate(courseId)
-            .setOwner(TicketOwner(
-                ticket.passengerUsername,
-                passengerInfo.email,
-                passengerInfo.eligibleForDiscount))
-            .ensureIf(ticket.isDiscounted, passengerInfo.eligibleForDiscount, "")
+            .ensure({ t -> if (t.isDiscounted) passengerInfo.eligibleForDiscount else true },
+                "Ticket owner with username: '${ticket.passengerUsername}' is not eligible for discounted ticket.")
+            .map { TicketValidationResult(
+                it.target,
+                TicketOwner(
+                    ticket.passengerUsername,
+                    passengerInfo.email,
+                    passengerInfo.eligibleForDiscount),
+                it.errors) }
     }
 }
