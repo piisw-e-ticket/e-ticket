@@ -73,7 +73,7 @@ class ValidateTicketEndpointTests {
                 this.courseId = courseId
             }))
         Mockito.`when`(authClient.getPassengerInfo(username))
-            .thenReturn(PassengerInfoDto("example@example.com", false))
+            .thenReturn(PassengerInfoDto("example@example.com", true))
 
         // when
         val response = sut.validateTicket(ValidateTicketDto(1, courseId))
