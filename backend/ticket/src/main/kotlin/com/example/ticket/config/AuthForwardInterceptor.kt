@@ -14,6 +14,7 @@ class AuthForwardInterceptor: RequestInterceptor {
     override fun apply(template: RequestTemplate) {
         val request = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)!!.request
         template.header(HttpHeaders.AUTHORIZATION, request.getHeader(HttpHeaders.AUTHORIZATION))
+        template.header(HttpHeaders.COOKIE, request.getHeader(HttpHeaders.COOKIE))
     }
 
 }

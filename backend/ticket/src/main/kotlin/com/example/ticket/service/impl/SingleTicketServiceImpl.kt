@@ -2,7 +2,7 @@ package com.example.ticket.service.impl
 
 import com.example.ticket.client.AuthClient
 import com.example.ticket.dto.PunchTicketDto
-import com.example.ticket.dto.Role
+import com.example.ticket.model.Role
 import com.example.ticket.model.SingleTicket
 import com.example.ticket.repository.SingleTicketRepository
 import com.example.ticket.service.SingleTicketService

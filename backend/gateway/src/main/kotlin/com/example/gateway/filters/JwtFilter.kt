@@ -28,12 +28,13 @@ class JwtFilter(
             ?: return exchange.response.apply { statusCode = HttpStatus.UNAUTHORIZED }.setComplete()
 
         val claims = jwtUtil.getClaims(token)
-            ?: return exchange.response.apply { statusCode = HttpStatus.BAD_REQUEST }.setComplete()
-
-        if (Date.from(Instant.now()).after(claims.expiration))
-            return exchange.response.apply { statusCode = HttpStatus.UNAUTHORIZED }.setComplete()
+            ?: return exchange.response.apply { statusCode = HttpStatus.UNAUTHORIZED }.setComplete()
 
         exchange.request.mutate().header("username", claims.subject).build()
+        exchange.request.mutate().header(
+            "user-role", claims.getOrDefault("role", "").toString())
+            .build()
+
         return chain!!.filter(exchange)
     }
 

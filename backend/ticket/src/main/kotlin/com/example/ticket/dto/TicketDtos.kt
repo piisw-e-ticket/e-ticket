@@ -55,7 +55,29 @@ data class PeriodicTicketReadDto(
 data class PunchTicketDto(
     val courseId: Long
 )
+
 data class PeriodicTicketCreateDto(
     val startDate: LocalDateTime,
     val endDate: LocalDateTime
+)
+
+data class ValidateTicketDto(
+    val ticketId: Long,
+    val courseId: Long
+)
+
+data class TicketValidationResultDto(
+    val isValid: Boolean,
+    val reason: String?,
+    val details: TicketValidationResultDetailsDto
+)
+
+data class TicketValidationResultDetailsDto(
+    val username: String,
+    val email: String,
+    val isUserEligibleForDiscount: Boolean,
+    val isTicketDiscounted: Boolean,
+    val startDate: LocalDateTime?,
+    val endDate: LocalDateTime?,
+    val assignedCourseId: Long?
 )
