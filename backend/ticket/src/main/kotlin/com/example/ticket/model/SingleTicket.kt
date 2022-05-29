@@ -12,11 +12,10 @@ class SingleTicket(
 
     var courseId: Long? = null
 
-    override fun validate(courseId: Long): TicketValidationResult =
-        TicketValidationResult.success(this)
-            .ensure(isPunched, "Ticket has not been punched yet.")
-            .ensure(
-                this.courseId == courseId,
+    override fun validate(courseId: Long): ValidationChain<SingleTicket> =
+        ValidationChain.begin(this)
+            .ensure({ t-> t.isPunched }, "Ticket has not been punched yet.")
+            .ensure({ t-> t.courseId == courseId },
                 "Ticket has been punched for a different course. " +
                         "Assigned course: ${this.courseId}, given course: $courseId.")
 
