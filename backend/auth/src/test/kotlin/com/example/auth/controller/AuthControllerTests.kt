@@ -20,7 +20,7 @@ import java.lang.Thread.sleep
 
 @SpringBootTest
 @Transactional
-class AuthControllerTest {
+class AuthControllerTests {
 
     @Autowired
     lateinit var sut: AuthController

@@ -14,8 +14,8 @@ class PeriodicTicket(
     override fun validate(courseId: Long): ValidationChain<PeriodicTicket> {
         val now = LocalDateTime.now()
 
-        return ValidationChain.begin(this)
-            .ensure({ t -> now.isAfter(t.startDate) }, "Ticket validity period has not started yet.")
-            .ensure({ t -> now.isBefore(t.endDate) }, "Ticket validity period has been exceeded already.")
+        return ValidationChain.begin(this, breakOnError = true)
+            .link(ensure({ t -> now.isAfter(t.startDate) }, "Ticket validity period has not started yet."))
+            .link(ensure({ t -> now.isBefore(t.endDate) }, "Ticket validity period has been exceeded already."))
     }
 }
