@@ -72,6 +72,14 @@
         </dependency>
         <!-- Kotlin -->
 
+        <!-- SpringDoc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+        <!-- SpringDoc -->
+
         <!-- DB Dependencies -->
         <dependency>
             <groupId>org.postgresql</groupId>

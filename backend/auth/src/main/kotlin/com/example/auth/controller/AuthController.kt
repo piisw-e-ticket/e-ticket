@@ -14,13 +14,14 @@ import javax.validation.Valid
 
 
 @RestController
+@RequestMapping("/auth")
 class AuthController(
         val authCookieProperties: AuthCookieProperties,
         val userService: UserService,
         val tokenService: TokenService
 ) {
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     fun login(
         @RequestBody loginDto: LoginDto,
         @RequestParam(required = false) setCookie: Boolean = false
@@ -30,7 +31,7 @@ class AuthController(
         return createResponse(authenticatedUser, tokenPair, setCookie)
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     fun register(
         @Valid @RequestBody registerDto: RegisterDto,
         @RequestParam(required = false) setCookie: Boolean = false
@@ -40,7 +41,7 @@ class AuthController(
         return createResponse(registeredUser, tokenPair, setCookie)
     }
 
-    @PostMapping("/auth/refresh")
+    @PostMapping("/refresh")
     fun refresh(
         @RequestHeader("Authorization", required = true) authHeader: String,
         @RequestParam(required = false) setCookie: Boolean = false
@@ -54,7 +55,7 @@ class AuthController(
         return createResponse(user, tokenPair, setCookie)
     }
 
-    @GetMapping("/auth/info")
+    @GetMapping("/info")
     fun getUserInfo(
         @RequestHeader("username") username: String
     ): ResponseEntity<UserInfoDto> {
@@ -62,7 +63,7 @@ class AuthController(
         return ResponseEntity.ok(user.asUserInfoDto())
     }
 
-    @GetMapping("/auth/passenger-info/{username}")
+    @GetMapping("/passenger-info/{username}")
     @RequiredRole(Role.TICKET_COLLECTOR)
     fun getPassengerInfo(
         @PathVariable("username") username: String

@@ -8,7 +8,6 @@ import com.example.ticket.service.SingleTicketService
 import com.example.ticket.service.TicketValidationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import reactor.core.publisher.Mono
 import javax.ws.rs.QueryParam
 
 @RestController
