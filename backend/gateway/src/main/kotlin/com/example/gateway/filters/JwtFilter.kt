@@ -8,8 +8,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
-import java.time.Instant
-import java.util.*
 
 
 @Component
@@ -17,7 +15,7 @@ class JwtFilter(
     val jwtUtil: JwtUtil
 ): GatewayFilter {
 
-    private val allowedEndpoints = listOf("/register", "/login", "/refresh")
+    private val allowedEndpoints = listOf("/register", "/login", "/refresh", "/v3/api-docs")
 
     override fun filter(exchange: ServerWebExchange?, chain: GatewayFilterChain?): Mono<Void> {
         val request: ServerHttpRequest = exchange!!.request

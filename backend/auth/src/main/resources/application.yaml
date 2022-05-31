@@ -4,8 +4,6 @@ server:
 spring:
   application:
     name: "auth"
-  main:
-    web-application-type: reactive
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -14,15 +12,6 @@ spring:
     hibernate:
       ddl-auto: create
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
 app:
   init-test-data: true
 
@@ -30,9 +19,3 @@ jwt:
   secret: "secret"
   accessTokenMaxAgeInMinutes: 5
   refreshTokenMaxAgeInMinutes: 4320
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
