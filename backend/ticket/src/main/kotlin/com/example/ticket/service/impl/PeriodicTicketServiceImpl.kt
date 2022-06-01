@@ -3,7 +3,6 @@ package com.example.ticket.service.impl
 import com.example.ticket.client.AuthClient
 import com.example.ticket.dto.PeriodicTicketCreateDto
 import com.example.ticket.model.PeriodicTicket
-import com.example.ticket.model.Role
 import com.example.ticket.repository.PeriodicTicketRepository
 import com.example.ticket.service.PeriodicTicketService
 import org.springframework.stereotype.Service
@@ -21,12 +20,18 @@ class PeriodicTicketServiceImpl(
     override fun getTicketsByUsername(username: String): List<PeriodicTicket> =
             periodicTicketRepository.getAllByPassengerUsername(username)
 
-    override fun createTicket(passengerUsername: String, discounted: Boolean, createDto: PeriodicTicketCreateDto): PeriodicTicket {
-        val userInfo = authClient.getUserInfo()
-        if (userInfo.role != Role.PASSENGER)
-            throw IllegalArgumentException("Only passenger is allowed to buy tickets.")
-        if (discounted and !userInfo.eligibleForDiscount!!)
-            throw IllegalArgumentException("Passenger '${userInfo.username}' is not eligible for a discounted ticket.")
+    override fun createTicket(
+        passengerUsername: String,
+        discounted: Boolean,
+        createDto: PeriodicTicketCreateDto
+    ): PeriodicTicket {
+        val passengerInfo = authClient.getPassengerInfo(passengerUsername)
+        if (discounted and !passengerInfo.eligibleForDiscount)
+            throw IllegalArgumentException("Passenger '$passengerUsername' is not eligible for a discounted ticket.")
+
+        if (createDto.endDate.isBefore(createDto.startDate))
+            throw IllegalArgumentException("Ticket start date '${createDto.startDate}'" +
+                    " cannot be before end date '${createDto.endDate}'")
 
         val ticket = PeriodicTicket(
                 startDate = createDto.startDate,
