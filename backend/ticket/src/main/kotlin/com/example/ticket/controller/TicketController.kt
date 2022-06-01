@@ -19,6 +19,7 @@ class TicketController(
 ) {
 
     @GetMapping
+    @RequiredRole(Role.PASSENGER)
     fun getAllUserTickets(@RequestHeader("username") username: String): ResponseEntity<TicketsReadDto> {
         val singleTickets = singleTicketService.getTicketsByUsername(username)
         val periodicTickets = periodicTicketService.getTicketsByUsername(username)
@@ -26,6 +27,7 @@ class TicketController(
     }
 
     @PostMapping("/single")
+    @RequiredRole(Role.PASSENGER)
     fun buySingleTicket(
         @RequestHeader("username") username: String,
         @QueryParam("discounted") discounted: Boolean = false
@@ -35,6 +37,7 @@ class TicketController(
     }
 
     @PatchMapping("/single/{ticketId}")
+    @RequiredRole(Role.PASSENGER)
     fun punchSingleTicket(
         @PathVariable ticketId: Long,
         @RequestBody punchTicketDto: PunchTicketDto
@@ -44,6 +47,7 @@ class TicketController(
     }
 
     @PostMapping("/periodic")
+    @RequiredRole(Role.PASSENGER)
     fun buyPeriodicTicket(
         @RequestHeader("username") username: String,
         @QueryParam("discounted") discounted: Boolean = false,
