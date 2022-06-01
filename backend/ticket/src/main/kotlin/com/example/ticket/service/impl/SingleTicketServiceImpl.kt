@@ -2,7 +2,6 @@ package com.example.ticket.service.impl
 
 import com.example.ticket.client.AuthClient
 import com.example.ticket.dto.PunchTicketDto
-import com.example.ticket.model.Role
 import com.example.ticket.model.SingleTicket
 import com.example.ticket.repository.SingleTicketRepository
 import com.example.ticket.service.SingleTicketService
@@ -22,11 +21,9 @@ class SingleTicketServiceImpl(
             singleTicketRepository.getAllByPassengerUsername(username)
 
     override fun createTicket(passengerUsername: String, discounted: Boolean): SingleTicket {
-        val userInfo = authClient.getUserInfo()
-        if (userInfo.role != Role.PASSENGER)
-            throw IllegalArgumentException("Only passenger is allowed to buy tickets.")
-        if (discounted and !userInfo.eligibleForDiscount!!)
-            throw IllegalArgumentException("Passenger '${userInfo.username}' is not eligible for a discounted ticket.")
+        val passengerInfo = authClient.getPassengerInfo(passengerUsername)
+        if (discounted && !passengerInfo.eligibleForDiscount)
+            throw IllegalArgumentException("Passenger '${passengerUsername}' is not eligible for a discounted ticket.")
 
         val ticket = SingleTicket(passengerUsername, discounted)
         return singleTicketRepository.save(ticket)
