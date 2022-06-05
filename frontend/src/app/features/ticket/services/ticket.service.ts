@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { TicketPeriodicDto } from '../models/ticketPeriodicDto';
 import { TicketsBoughtDto } from '../models/ticketsBoughtDto';
 import { TicketSingleDto } from '../models/ticketSingleDto';
+import { TicketValidatedDto } from '../models/ticketValidatedDto';
+import { ValidationInputsDto } from '../models/validationInputsDto';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +26,9 @@ export class TicketService {
 
   getUserTickets(username: string): Observable<TicketsBoughtDto> {
     return this.http.get<TicketsBoughtDto>('/tickets', {headers: {username}});
+  }
+
+  validateTicket(validationInputDto: ValidationInputsDto): Observable<TicketValidatedDto> {
+    return this.http.post<TicketValidatedDto>('/tickets/validate', {ticketId: validationInputDto.ticketId, courseId: validationInputDto.courseId});
   }
 }

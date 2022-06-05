@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { TicketService } from './ticket.service';
+import { TicketCollectorGuard } from './ticket-collector-guard.guard';
 
-describe('TicketService', () => {
-  let service: TicketService;
+describe('TicketCollectorGuard', () => {
+  let guard: TicketCollectorGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,10 +12,10 @@ describe('TicketService', () => {
         HttpClientTestingModule
       ]
     });
-    service = TestBed.inject(TicketService);
+    guard = TestBed.inject(TicketCollectorGuard);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(guard).toBeTruthy();
   });
 });

@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
 
   userInfo: UserInfoDto | null = null;
   ticketsBought: TicketsBoughtDto | null = null;
-  ticketsType: string = 'single'
+  ticketsType: string = 'single';
 
   constructor(private ticketService: TicketService, private authService: AuthService) { }
 

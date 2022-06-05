@@ -20,6 +20,7 @@ import { TicketPeriodicOrderComponent } from './components/ticket-periodic-order
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { TicketTimeLimitedComponent } from './components/ticket-time-limited/ticket-time-limited.component';
+import { VerifyTicketComponent } from './components/verify-ticket/verify-ticket.component';
 
 
 
@@ -33,7 +34,8 @@ import { TicketTimeLimitedComponent } from './components/ticket-time-limited/tic
     TicketPurchasedComponent,
     TicketPeriodicComponent,
     TicketPeriodicOrderComponent,
-    TicketTimeLimitedComponent
+    TicketTimeLimitedComponent,
+    VerifyTicketComponent
   ],
   imports: [
     CommonModule,

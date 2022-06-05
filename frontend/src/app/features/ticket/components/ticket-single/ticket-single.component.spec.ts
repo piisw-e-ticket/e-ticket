@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { TicketSingleComponent } from './ticket-single.component';
 
@@ -8,7 +10,11 @@ describe('TicketSingleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TicketSingleComponent ]
+      declarations: [ TicketSingleComponent ],
+      imports: [ 
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([])
+      ]
     })
     .compileComponents();
   });

@@ -1,24 +1,24 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TicketPeriodicOrderComponent } from './ticket-periodic-order.component';
+import { VerifyTicketComponent } from './verify-ticket.component';
 
-describe('TicketPeriodicOrderComponent', () => {
-  let component: TicketPeriodicOrderComponent;
-  let fixture: ComponentFixture<TicketPeriodicOrderComponent>;
+describe('VerifyTicketComponent', () => {
+  let component: VerifyTicketComponent;
+  let fixture: ComponentFixture<VerifyTicketComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TicketPeriodicOrderComponent ],
+      declarations: [ VerifyTicketComponent ],
       imports: [ 
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TicketPeriodicOrderComponent);
+    fixture = TestBed.createComponent(VerifyTicketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
