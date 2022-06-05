@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import * as moment from "moment";
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { AuthResultDto } from '../models/authResultDto';
+import { UserInfoDto } from '../models/userInfoDto';
 
 interface SessionKeys {
   refreshToken: string,
@@ -63,6 +64,7 @@ class Session {
 export class AuthService {
 
   private session = Session.instance();
+  private userInfo: UserInfoDto | null | undefined;
 
   constructor(private http: HttpClient) {}
 
@@ -72,6 +74,10 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !this.session.isExpired()
+  }
+
+  getUserInfo(): UserInfoDto | null | undefined {
+    return this.userInfo;
   }
 
   refresh(): Observable<boolean> {
@@ -89,6 +95,10 @@ export class AuthService {
     return this.http.post<AuthResultDto>("/auth/login?setCookie=true", loginDto)
       .pipe(
         tap(res => this.setSession(res)),
+        tap(res => this.userInfo = {
+          "username": loginDto.username,
+          "roles": res.roles
+        } as UserInfoDto),
         shareReplay()
       );
   }
@@ -97,6 +107,10 @@ export class AuthService {
     return this.http.post<AuthResultDto>("/auth/register?setCookie=true", registerDto)
       .pipe(
         tap(res => this.setSession(res)),
+        tap(res => this.userInfo = {
+          "username": registerDto.username,
+          "roles": res.roles
+        } as UserInfoDto),
         shareReplay()
       )
   }
