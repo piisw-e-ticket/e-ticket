@@ -34,16 +34,8 @@ export class VerifyTicketComponent {
         const validatedTicket = val as TicketValidatedDto;
         if (validatedTicket.errors?.length > 0) {
           this.error = validatedTicket.errors[0];
-        }
-        this.validationResult = validatedTicket.valid;
+        } else this.error = null;
+        this.validationResult = validatedTicket.isValid;
       })
-      // .pipe(catchError(error => of(error)))
-      // .subscribe(res => {
-      //   if (res instanceof HttpErrorResponse) {
-      //     this.error = res.error;
-      //   }
-      //   else this.router.navigateByUrl('/aut/profile')
-      // });
   }
-
 }

@@ -16,3 +16,12 @@ form {
     flex-direction: column;
     margin: 2rem 0;
 }
+
+span {
+    color: green;
+}
+
+span, .request-error {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}

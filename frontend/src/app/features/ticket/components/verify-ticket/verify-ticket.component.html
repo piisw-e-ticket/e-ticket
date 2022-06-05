@@ -16,7 +16,7 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-error *ngIf="error">{{error}}</mat-error>
+        <mat-error *ngIf="error" class="request-error">{{error}}</mat-error>
 
         <span *ngIf="validationResult">{{validationResult ? "Ticket is valid!" : "Ticket is invalid!"}}</span>
 
