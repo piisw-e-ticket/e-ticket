@@ -6,6 +6,7 @@ import { TicketPeriodicOrderComponent } from './components/ticket-periodic-order
 import { TicketPeriodicComponent } from './components/ticket-periodic/ticket-periodic.component';
 import { TicketPurchasedComponent } from './components/ticket-purchased/ticket-purchased.component';
 import { TicketSingleComponent } from './components/ticket-single/ticket-single.component';
+import { TicketTimeLimitedComponent } from './components/ticket-time-limited/ticket-time-limited.component';
 import { TicketPeriodicGuard } from './guards/ticket-periodic.guard';
 import { TicketComponent } from './ticket.component';
 
@@ -40,6 +41,10 @@ const routes: Routes = [
           TicketPeriodicGuard
         ]
       },
+      {
+        path: "offer/time-limited",
+        component: TicketTimeLimitedComponent
+      }
     ]
   }
 ];
