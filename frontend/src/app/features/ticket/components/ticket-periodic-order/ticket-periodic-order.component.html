@@ -1,0 +1,15 @@
+<div>
+    <mat-form-field appearance="fill" class="example-form-field">
+        <mat-label>Wybierz datę rozpoczęcia</mat-label>
+        <input matInput [matDatepicker]="datepicker" [matDatepickerFilter]="dateFilter" disabled (dateInput)="changeDate($event)" (dateChange)="changeDate($event)">
+        <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker disabled="false">
+        <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Anuluj</button>
+            <button mat-raised-button color="primary" matDatepickerApply>Wybierz</button>
+        </mat-datepicker-actions>
+        </mat-datepicker>
+    </mat-form-field>
+    <span *ngIf="startDate !== null && endDate !== null">Data zakończenia: {{endDate.toLocaleDateString("pl")}}</span>
+    <button mat-raised-button color="primary" [disabled]="endDate === null" (click)="onSubmit()">Kup</button>
+</div>

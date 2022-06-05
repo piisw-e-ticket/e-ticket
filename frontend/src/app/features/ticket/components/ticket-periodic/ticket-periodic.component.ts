@@ -5,11 +5,11 @@ import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { TicketService } from '../../services/ticket.service';
 
 @Component({
-  selector: 'app-ticket-single',
-  templateUrl: './ticket-single.component.html',
-  styleUrls: ['./ticket-single.component.css']
+  selector: 'app-ticket-periodic',
+  templateUrl: './ticket-periodic.component.html',
+  styleUrls: ['./ticket-periodic.component.css']
 })
-export class TicketSingleComponent implements OnInit {
+export class TicketPeriodicComponent implements OnInit {
 
   userInfo: UserInfoDto | null = null;
 
@@ -24,5 +24,4 @@ export class TicketSingleComponent implements OnInit {
     this.ticketService.buySingleTicket(this.userInfo?.username!, discounted)
       .subscribe(_ => this.router.navigateByUrl('/ticket/purchased'));
   }
-
 }
