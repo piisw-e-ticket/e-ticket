@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserInfoDto } from '../../models/userInfoDto';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -8,8 +9,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-  constructor(private authService: AuthService, private router: Router) {
 
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   onLogout() {

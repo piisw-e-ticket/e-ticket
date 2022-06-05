@@ -7,7 +7,9 @@ import { TicketOfferComponent } from './components/ticket-offer/ticket-offer.com
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
+import {MatListModule} from '@angular/material/list';
 import { ProfileComponent } from './components/profile/profile.component';
+import { TicketSingleComponent } from './components/ticket-single/ticket-single.component';
 
 
 @NgModule({
@@ -15,13 +17,15 @@ import { ProfileComponent } from './components/profile/profile.component';
     TicketComponent,
     TicketOfferComponent,
     NavbarComponent,
-    ProfileComponent
+    ProfileComponent,
+    TicketSingleComponent
   ],
   imports: [
     CommonModule,
     TicketRoutingModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatListModule
   ]
 })
 export class TicketModule { }

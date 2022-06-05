@@ -8,6 +8,8 @@ import * as moment from "moment";
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { AuthResultDto } from '../models/authResultDto';
 import { UserInfoDto } from '../models/userInfoDto';
+import jwtDecode from 'jwt-decode';
+import { JwtDto } from '../models/jwtDto';
 
 interface SessionKeys {
   refreshToken: string,
@@ -64,7 +66,6 @@ class Session {
 export class AuthService {
 
   private session = Session.instance();
-  private userInfo: UserInfoDto | null | undefined;
 
   constructor(private http: HttpClient) {}
 
@@ -76,8 +77,8 @@ export class AuthService {
     return !this.session.isExpired()
   }
 
-  getUserInfo(): UserInfoDto | null | undefined {
-    return this.userInfo;
+  getUserInfo(): Observable<UserInfoDto | null> {
+    return this.http.get<UserInfoDto>("/auth/info", {headers: {username: (jwtDecode(this.session.getRefreshToken()!) as JwtDto).sub}});
   }
 
   refresh(): Observable<boolean> {
@@ -95,10 +96,6 @@ export class AuthService {
     return this.http.post<AuthResultDto>("/auth/login?setCookie=true", loginDto)
       .pipe(
         tap(res => this.setSession(res)),
-        tap(res => this.userInfo = {
-          "username": loginDto.username,
-          "roles": res.roles
-        } as UserInfoDto),
         shareReplay()
       );
   }
@@ -107,10 +104,6 @@ export class AuthService {
     return this.http.post<AuthResultDto>("/auth/register?setCookie=true", registerDto)
       .pipe(
         tap(res => this.setSession(res)),
-        tap(res => this.userInfo = {
-          "username": registerDto.username,
-          "roles": res.roles
-        } as UserInfoDto),
         shareReplay()
       )
   }

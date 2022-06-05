@@ -1,0 +1,19 @@
+mat-list {
+    width: 500px;
+}
+
+mat-list-item {
+    background-color:rgb(233, 233, 233);
+    margin-bottom: 1rem;
+}
+
+span {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+button {
+    font-size: 20px;
+}
