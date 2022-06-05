@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
+import { mergeMap } from 'rxjs';
+import { UserInfoDto } from 'src/app/features/auth/models/userInfoDto';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { TicketsBoughtDto } from '../../models/ticketsBoughtDto';
+import { TicketService } from '../../services/ticket.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +13,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  userInfo: UserInfoDto | null = null;
+  ticketsBought: TicketsBoughtDto | null = null;
+  ticketsType: string = 'single'
+
+  constructor(private ticketService: TicketService, private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.getUserInfo().pipe(
+      mergeMap(val => {
+        this.userInfo = val;
+        return this.ticketService.getUserTickets(val?.username!)
+      })
+    ).subscribe(val => this.ticketsBought = val);
+  }
+
+  formatDate(startDate: string, endDate: string): string {    
+    return `${moment.utc(startDate).local().format('DD.MM.YYYY, HH:mm')} – ${moment.utc(endDate).local().format('DD.MM.YYYY, HH:mm')}`
+  }
+
+  checkValidity(startDate: string, endDate: string): boolean {
+    return moment(moment()).isBetween(startDate, endDate);
   }
 
 }

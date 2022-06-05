@@ -3,5 +3,5 @@ export interface TicketPeriodicDto {
     passengerUsername: string,
     startDate: string,
     endDate: string,
-    discounted: boolean
+    isDiscounted: boolean
 }

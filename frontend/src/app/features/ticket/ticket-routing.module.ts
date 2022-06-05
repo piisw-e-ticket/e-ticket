@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthenticatedGuard } from '../auth/guards/authenticated.guard';
+import { ProfileComponent } from './components/profile/profile.component';
 import { TicketOfferComponent } from './components/ticket-offer/ticket-offer.component';
 import { TicketPeriodicOrderComponent } from './components/ticket-periodic-order/ticket-periodic-order.component';
 import { TicketPeriodicComponent } from './components/ticket-periodic/ticket-periodic.component';
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: "purchased",
         component: TicketPurchasedComponent
+      },
+      {
+        path: "profile",
+        component: ProfileComponent
       },
       {
         path: "offer",

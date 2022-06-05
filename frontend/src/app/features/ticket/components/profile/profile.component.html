@@ -1,1 +1,44 @@
-<p>profile works!</p>
+<section>
+    <mat-button-toggle-group [(ngModel)]="ticketsType">
+      <mat-button-toggle value="single">Bilety jednorazowe</mat-button-toggle>
+      <mat-button-toggle value="periodic">Bilety czasowe</mat-button-toggle>
+    </mat-button-toggle-group>
+</section>
+
+<ng-container *ngIf="ticketsType === 'single'">
+    <div *ngFor="let ticket of (ticketsBought?.singleTickets ? ticketsBought?.singleTickets!.reverse() : [])" class="card">
+        <div class="ticket-container">
+            <h2>Bilet #{{ticket.id}}</h2>
+            <h3 *ngIf="ticket.courseId !== null">Kurs #{{ticket.courseId}}</h3>
+            <div class="checkmark-card">
+                <span class="fat">Ulgowy?</span>
+                <mat-icon class="green" *ngIf="ticket.isDiscounted">done</mat-icon>
+                <mat-icon class="red" *ngIf="!ticket.isDiscounted">close</mat-icon>
+            </div>
+            <div class="checkmark-card">
+                <span class="fat">Skasowany?</span>
+                <mat-icon class="green" *ngIf="ticket.isPunched">done</mat-icon>
+                <mat-icon class="red" *ngIf="!ticket.isPunched">close</mat-icon>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="ticketsType === 'periodic'">
+    <div *ngFor="let ticket of (ticketsBought?.periodicTickets ? ticketsBought?.periodicTickets!.reverse() : [])" class="card">
+        <div class="ticket-container">
+            <h2>Bilet #{{ticket.id}}</h2>
+            <span class="date">{{formatDate(ticket.startDate, ticket.endDate)}}</span>
+            <div class="checkmark-card">
+                <span class="fat">Ulgowy?</span>
+                <mat-icon class="green" *ngIf="ticket.isDiscounted">done</mat-icon>
+                <mat-icon class="red" *ngIf="!ticket.isDiscounted">close</mat-icon>
+            </div>
+            <div class="checkmark-card">
+                <span class="fat">Aktywny?</span>
+                <mat-icon class="green" *ngIf="checkValidity(ticket.startDate, ticket.endDate)">done</mat-icon>
+                <mat-icon class="red" *ngIf="!checkValidity(ticket.startDate, ticket.endDate)">close</mat-icon>
+            </div>
+        </div>
+    </div>
+</ng-container>
