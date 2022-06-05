@@ -8,25 +8,23 @@ import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
-import org.springframework.http.server.reactive.ServerHttpRequest
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 
 @Aspect
 @Component
 class RequiredRoleProcessor {
 
     @Around("@annotation(com.example.auth.infrastructure.RequiredRole)")
-    fun process(call: ProceedingJoinPoint) : Mono<*> {
-        return Mono.deferContextual { ctx ->
-            val request = ctx[ServerHttpRequest::class.java]
-            val annotation = (call.signature as MethodSignature).method.getAnnotation(RequiredRole::class.java)
-            val res = request.headers["user-role"]?.first()?.runCatching { Role.valueOf(this) }
+    fun process(call: ProceedingJoinPoint) : ResponseEntity<*> {
+        val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
+        val annotation = (call.signature as MethodSignature).method.getAnnotation(RequiredRole::class.java)
+        val res = request.getHeader("user-role")?.runCatching { Role.valueOf(this) }
 
-            if (res?.isSuccess == true && annotation.roles.contains(res.getOrThrow()))
-                call.proceed() as Mono<*>
-            else
-                Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build<Any>())
-        }
+        return if (res?.isSuccess == true && annotation.roles.contains(res.getOrThrow()))
+            call.proceed() as ResponseEntity<*>
+        else
+            ResponseEntity.status(HttpStatus.FORBIDDEN).build<Any>()
     }
 
 }

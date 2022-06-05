@@ -67,11 +67,11 @@ class AuthController(
     @RequiredRole(Role.TICKET_COLLECTOR)
     fun getPassengerInfo(
         @PathVariable("username") username: String
-    ): Mono<ResponseEntity<PassengerInfoDto>> {
+    ): ResponseEntity<PassengerInfoDto> {
         val user = userService.getUserByUsername(username)
         if (user !is Passenger)
             throw IllegalArgumentException("Provided username: '$username' does not belong to passenger")
-        return Mono.just(ResponseEntity.ok(user.asPassengerInfoDto()))
+        return ResponseEntity.ok(user.asPassengerInfoDto())
     }
 
     private fun createResponse(
