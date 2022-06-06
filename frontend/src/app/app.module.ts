@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './features/auth/auth.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SessionKeeperInterceptor as SessionKeeperInterceptor } from './features/auth/interceptors/session-keeper.interceptor';
+import { TicketModule } from './features/ticket/ticket.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { SessionKeeperInterceptor as SessionKeeperInterceptor } from './features
     BrowserModule,
     BrowserAnimationsModule,
     AuthModule,
+    TicketModule,
     AppRoutingModule,
     HttpClientModule
   ],

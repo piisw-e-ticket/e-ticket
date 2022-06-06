@@ -7,6 +7,9 @@ import { HttpClient } from '@angular/common/http';
 import * as moment from "moment";
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { AuthResultDto } from '../models/authResultDto';
+import { UserInfoDto } from '../models/userInfoDto';
+import jwtDecode from 'jwt-decode';
+import { JwtDto } from '../models/jwtDto';
 
 interface SessionKeys {
   refreshToken: string,
@@ -72,6 +75,15 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !this.session.isExpired()
+  }
+
+  getUserInfo(): Observable<UserInfoDto | null> {
+    const token = this.session.getRefreshToken();
+    if (token) {
+      return this.http.get<UserInfoDto>("/auth/info", {headers: {username: (jwtDecode(this.session.getRefreshToken()!) as JwtDto).sub}});
+    } else {
+      return of(null);
+    }
   }
 
   refresh(): Observable<boolean> {

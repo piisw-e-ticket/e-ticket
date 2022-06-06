@@ -1,17 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-import { ProfileComponent } from './profile.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('ProfileComponent', () => {
-  let component: ProfileComponent;
-  let fixture: ComponentFixture<ProfileComponent>;
+import { TicketPeriodicComponent } from './ticket-periodic.component';
+
+describe('TicketPeriodicComponent', () => {
+  let component: TicketPeriodicComponent;
+  let fixture: ComponentFixture<TicketPeriodicComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ],
-      imports: [
+      declarations: [ TicketPeriodicComponent ],
+      imports: [ 
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([])
       ]
@@ -20,7 +20,7 @@ describe('ProfileComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileComponent);
+    fixture = TestBed.createComponent(TicketPeriodicComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

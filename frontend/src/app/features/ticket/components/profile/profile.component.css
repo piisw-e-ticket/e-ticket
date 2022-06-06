@@ -1,0 +1,37 @@
+mat-icon.green {
+    color: green;
+}
+
+mat-icon.red {
+    color: red;
+}
+
+mat-button-toggle {
+    width: 175px;
+}
+
+.ticket-container {
+    width: 350px;
+    box-sizing: border-box;
+    background-color:rgb(233, 233, 233);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    padding: 0.5rem;
+}
+
+.checkmark-card {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+span.fat {
+    font-weight: 500;
+}
+
+span.date {
+    margin-bottom: 1rem;
+}

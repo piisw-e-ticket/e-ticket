@@ -64,7 +64,7 @@ export class RegisterComponent {
         if (res instanceof HttpErrorResponse) {
           this.error = res.error;
         }
-        this.router.navigateByUrl('/aut/profile')
+        this.router.navigateByUrl('/ticket/offer')
       });
   }
 }

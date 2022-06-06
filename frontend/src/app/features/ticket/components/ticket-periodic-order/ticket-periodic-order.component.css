@@ -1,0 +1,14 @@
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+span {
+    margin-bottom: 1rem;
+}
+
+input:disabled {
+    color: black;
+}
