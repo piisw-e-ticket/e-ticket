@@ -19,9 +19,4 @@ export class TicketPeriodicComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getUserInfo().subscribe(val => this.userInfo = val);
   }
-
-  onSubmit(discounted: boolean) {
-    this.ticketService.buySingleTicket(this.userInfo?.username!, discounted)
-      .subscribe(_ => this.router.navigateByUrl('/ticket/purchased'));
-  }
 }

@@ -78,7 +78,12 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<UserInfoDto | null> {
-    return this.http.get<UserInfoDto>("/auth/info", {headers: {username: (jwtDecode(this.session.getRefreshToken()!) as JwtDto).sub}});
+    const token = this.session.getRefreshToken();
+    if (token) {
+      return this.http.get<UserInfoDto>("/auth/info", {headers: {username: (jwtDecode(this.session.getRefreshToken()!) as JwtDto).sub}});
+    } else {
+      return of(null);
+    }
   }
 
   refresh(): Observable<boolean> {

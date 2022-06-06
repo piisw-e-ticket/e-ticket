@@ -1,5 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DateAdapter } from '@angular/material/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { TicketPeriodicOrderComponent } from './ticket-periodic-order.component';
 
@@ -12,6 +14,10 @@ describe('TicketPeriodicOrderComponent', () => {
       declarations: [ TicketPeriodicOrderComponent ],
       imports: [ 
         HttpClientTestingModule,
+        RouterTestingModule.withRoutes([])
+      ],
+      providers: [
+        DateAdapter
       ]
     })
     .compileComponents();

@@ -50,6 +50,10 @@ import { VerifyTicketComponent } from './components/verify-ticket/verify-ticket.
     MatButtonToggleModule,
     MatIconModule,
     FormsModule
+  ],
+  providers: [
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class TicketModule { }
