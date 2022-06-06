@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { mergeMap } from 'rxjs';
 import { UserInfoDto } from 'src/app/features/auth/models/userInfoDto';
@@ -17,7 +18,7 @@ export class ProfileComponent implements OnInit {
   ticketsBought: TicketsBoughtDto | null = null;
   ticketsType: string = 'single';
 
-  constructor(private ticketService: TicketService, private authService: AuthService) { }
+  constructor(private ticketService: TicketService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.authService.getUserInfo().pipe(
@@ -36,4 +37,8 @@ export class ProfileComponent implements OnInit {
     return moment(moment()).isBetween(startDate, endDate);
   }
 
+  onLogout() {
+    this.authService.logout();
+    this.router.navigateByUrl("/aut/login");
+  }
 }
