@@ -1,0 +1,13 @@
+server:
+    port: 0
+
+spring:
+    application:
+        name: "ticket"
+    datasource:
+        url: jdbc:postgresql://localhost:5433/postgres
+        username: postgres
+        password: password
+    jpa:
+        hibernate:
+            ddl-auto: create

@@ -14,3 +14,7 @@ jwt:
   secret: "secret"
   accessTokenMaxAgeInMinutes: 5
   refreshTokenMaxAgeInMinutes: 4320
+
+swagger:
+  config:
+    refreshRate: 30000

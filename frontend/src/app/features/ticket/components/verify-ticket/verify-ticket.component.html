@@ -1,0 +1,25 @@
+<main>
+    <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()">    
+        <mat-form-field appearance="fill">
+            <mat-label for="ticketId">Ticket ID</mat-label>
+            <input id="ticketId" type="number" formControlName="ticketId" matInput>
+            <mat-error *ngIf="ticketId?.hasError('required')">
+                TicketID is required!
+            </mat-error>
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+            <mat-label for="courseId">Course ID</mat-label>
+            <input id="courseId" type="number" formControlName="courseId" matInput>
+            <mat-error *ngIf="courseId?.hasError('required')">
+                CourseID is required!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-error *ngIf="error" class="request-error">{{error}}</mat-error>
+
+        <span *ngIf="validationResult">{{validationResult ? "Ticket is valid!" : "Ticket is invalid!"}}</span>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="!verificationForm.valid">Submit</button>
+    </form>
+</main>

@@ -13,7 +13,7 @@ export class AuthenticatedGuard implements CanActivate {
   }
 
   canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authService.isLoggedIn();
+    return this.authService.isLoggedIn() || this.authService.refresh();
   }
-  
+
 }

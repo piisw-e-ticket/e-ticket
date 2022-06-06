@@ -1,5 +1,8 @@
 package com.example.auth.controller
 
+import com.example.auth.service.ExpiredTokenException
+import com.example.auth.service.MalformedTokenException
+import com.example.auth.service.RefreshTokenReuseAttemptException
 import org.apache.http.auth.InvalidCredentialsException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,9 +19,11 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
     protected fun handleError(
         e: Exception
     ): ResponseEntity<Any> = when(e) {
-        is InvalidCredentialsException -> ResponseEntity.badRequest().body(e.message)
-        is IllegalArgumentException -> ResponseEntity.badRequest().body(e.message)
-        is AccessDeniedException -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
+        is IllegalArgumentException,
+        is InvalidCredentialsException,
+        is MalformedTokenException -> ResponseEntity.badRequest().body(e.message)
+        is ExpiredTokenException,
+        is RefreshTokenReuseAttemptException -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
         is WebExchangeBindException -> handleMethodArgumentNotValid(e)
         else -> ResponseEntity.internalServerError().body(e.message)
     }

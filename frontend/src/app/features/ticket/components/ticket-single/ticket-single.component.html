@@ -1,0 +1,10 @@
+<mat-list>
+    <mat-list-item>
+        <span>Bilet jednorazowy</span>
+        <button mat-raised-button color="primary" (click)="onSubmit(false)">Kup</button>
+    </mat-list-item>
+    <mat-list-item>
+        <span>Bilet jednorazowy ulgowy</span>
+        <button mat-raised-button color="primary" [disabled]="!userInfo?.eligibleForDiscount" (click)="onSubmit(true)">Kup</button>
+    </mat-list-item>
+</mat-list>

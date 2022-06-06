@@ -1,14 +1,11 @@
 package com.example.auth.service.impl
 
-import com.example.auth.error.UnauthorizedException
 import com.example.auth.model.TokenFamily
 import com.example.auth.model.TokenPair
-import com.example.auth.model.User
-import com.example.auth.service.TokenFamilyService
-import com.example.auth.service.TokenService
+import com.example.auth.model.ETicketUser
+import com.example.auth.service.*
 import io.jsonwebtoken.Claims
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class TokenServiceImpl(
@@ -16,10 +13,10 @@ class TokenServiceImpl(
     private val jwtUtil: JwtUtil
 ) : TokenService {
 
-    override fun createTokenPair(user: User, tokenFamily: TokenFamily?): TokenPair {
+    override fun createTokenPair(user: ETicketUser, tokenFamily: TokenFamily?): TokenPair {
         val family = tokenFamily ?: TokenFamily()
 
-        val tokenPair = jwtUtil.generateTokenPair(user.username, family.id)
+        val tokenPair = jwtUtil.generateTokenPair(user, family.id)
         family.validToken = tokenPair.refreshToken.token
         tokenFamilyService.save(family)
 
@@ -28,30 +25,35 @@ class TokenServiceImpl(
 
     override fun createTokenPairUsingRefreshToken(
         refreshToken: String,
-        provideUser: (String) -> User
+        provideUser: (String) -> ETicketUser
     ): TokenPair {
-        val claims: Claims = jwtUtil.getClaims(refreshToken)
-            ?: throw IllegalArgumentException("Refresh token is malformed")
+        lateinit var claims: Claims
+        try {
+            claims = jwtUtil.getClaims(refreshToken)
+        } catch (e: ExpiredTokenException) {
+            tryInvalidateTokenFamily(e.claims)
+            throw e
+        }
+
         val familyId: String = claims.getOrDefault("fid", null)?.toString()
-            ?: throw IllegalArgumentException("Refresh token must come from a token family")
+            ?: throw MalformedTokenException("Refresh token must come from a token family")
         val tokenFamily = tokenFamilyService.getById(familyId)
-            ?: throw IllegalArgumentException("Token family does not exist")
 
         if (tokenFamily.isInvalidated)
-            throw UnauthorizedException("Token family is invalidated")
-
-        if (Date().after(claims.expiration)) {
-            tokenFamilyService.invalidate(tokenFamily)
-            throw UnauthorizedException("Refresh token is expired")
-        }
+            throw RefreshTokenReuseAttemptException("Token family is invalidated")
 
         if (tokenFamily.validToken != refreshToken) {
             tokenFamilyService.invalidate(tokenFamily)
-            throw UnauthorizedException("Refresh token has already been used")
+            throw RefreshTokenReuseAttemptException("Refresh token has already been used")
         }
 
         val user = provideUser(claims.subject)
         return createTokenPair(user, tokenFamily)
     }
 
+    private fun tryInvalidateTokenFamily(claims: Claims?) {
+        claims?.getOrDefault("fid", null)?.toString()?.let { fid ->
+            tokenFamilyService.tryInvalidate(fid)
+        }
+    }
 }
