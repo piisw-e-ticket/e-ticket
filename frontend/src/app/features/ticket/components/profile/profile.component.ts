@@ -36,9 +36,4 @@ export class ProfileComponent implements OnInit {
   checkValidity(startDate: string, endDate: string): boolean {
     return moment(moment()).isBetween(startDate, endDate);
   }
-
-  onLogout() {
-    this.authService.logout();
-    this.router.navigateByUrl("/aut/login");
-  }
 }
