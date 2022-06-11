@@ -22,9 +22,9 @@ export class TicketTimeLimitedComponent implements OnInit {
   }
 
   onSubmit(discounted: boolean, duration: number, durationUnit: string) {
-    const startDateFormatted = moment().utc().format();
+    const startDateFormatted = moment().format('YYYY-MM-DD[T]HH:mm:ss');
     const durationUnitVerified = durationUnit === 'days' ? 'days' : durationUnit === 'hours' ? 'hours' : 'minutes';
-    const endDateFormatted = moment().add(duration, durationUnitVerified).utc().format();
+    const endDateFormatted = moment().add(duration, durationUnitVerified).format('YYYY-MM-DD[T]HH:mm:ss');
     this.ticketService.buyPeriodicTicket(this.userInfo?.username!, discounted, startDateFormatted, endDateFormatted)
       .subscribe(_ => this.router.navigateByUrl('/ticket/purchased'));
   }

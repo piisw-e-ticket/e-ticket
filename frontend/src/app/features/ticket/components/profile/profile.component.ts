@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
   }
 
   formatDate(startDate: string, endDate: string): string {    
-    return `${moment.utc(startDate).local().format('DD.MM.YYYY, HH:mm')} – ${moment.utc(endDate).local().format('DD.MM.YYYY, HH:mm')}`
+    return `${moment(startDate).format('DD.MM.YYYY, HH:mm')} – ${moment(endDate).format('DD.MM.YYYY, HH:mm')}`
   }
 
   checkValidity(startDate: string, endDate: string): boolean {
