@@ -34,6 +34,6 @@ export class ProfileComponent implements OnInit {
   }
 
   checkValidity(startDate: string, endDate: string): boolean {
-    return moment(moment()).isBetween(startDate, endDate);
+    return moment(moment()).isBetween(startDate, endDate, undefined, '[]');
   }
 }

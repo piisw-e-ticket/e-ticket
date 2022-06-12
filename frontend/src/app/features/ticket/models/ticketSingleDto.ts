@@ -1,7 +1,7 @@
 export interface TicketSingleDto {
     id: number,
     passengerUsername: string,
-    courseId: number,
+    courseId: number | null,
     isDiscounted: boolean,
     isPunched: boolean
 }
