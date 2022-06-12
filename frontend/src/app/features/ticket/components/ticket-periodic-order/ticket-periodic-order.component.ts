@@ -47,8 +47,8 @@ export class TicketPeriodicOrderComponent implements OnInit {
 
   onSubmit() {
     const discounted = this.route.snapshot.params['discount'] == 'true';
-    const startDateFormatted = moment(this.startDate).utc().format();
-    const endDateFormatted = moment(this.endDate).utc().format();
+    const startDateFormatted = moment(this.startDate).format('YYYY-MM-DD[T]HH:mm:ss');
+    const endDateFormatted = moment(this.endDate).format('YYYY-MM-DD[T]HH:mm:ss');
     this.ticketService.buyPeriodicTicket(this.userInfo?.username!, discounted, startDateFormatted, endDateFormatted)
       .subscribe(_ => this.router.navigateByUrl('/ticket/purchased'));
   }
